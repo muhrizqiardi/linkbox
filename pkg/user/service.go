@@ -4,6 +4,7 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -20,10 +21,11 @@ type Service interface {
 
 type service struct {
 	repo Repository
+	fs   folder.Service
 }
 
-func NewService(repo Repository) *service {
-	return &service{repo}
+func NewService(repo Repository, fs folder.Service) *service {
+	return &service{repo, fs}
 }
 
 func (s *service) Create(payload CreateUserDTO) (UserEntity, error) {
@@ -41,6 +43,14 @@ func (s *service) Create(payload CreateUserDTO) (UserEntity, error) {
 	}
 	user, err := s.repo.CreateUser(payload.Username, string(hashedPassword))
 	if err != nil {
+		return UserEntity{}, err
+	}
+
+	newDefaultFolderPayload := folder.CreateFolderDTO{
+		UniqueName: "default",
+		UserID:     user.ID,
+	}
+	if _, err := s.fs.Create(newDefaultFolderPayload); err != nil {
 		return UserEntity{}, err
 	}
 
