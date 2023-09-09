@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
-	_ "github.com/lib/pq"
 	"log"
 	"net/http"
 	"os"
 
+	_ "github.com/lib/pq"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
@@ -45,7 +47,9 @@ func main() {
 	lg.Println("successfully connected to database")
 
 	ur := user.NewRepository(db)
-	us := user.NewService(ur)
+	fr := folder.NewRepository(db)
+	fs := folder.NewService(fr)
+	us := user.NewService(ur, fs)
 	r := common.Route(lg, us)
 
 	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
