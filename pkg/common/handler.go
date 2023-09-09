@@ -10,6 +10,16 @@ import (
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
+func HandleIndexPage(lg *log.Logger) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := templates.IndexPage(w, templates.IndexPageData{}); err != nil {
+			lg.Println("failed to render page:", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
 func HandleRegisterPage(lg *log.Logger, as auth.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		existingCookie, err := r.Cookie("token")
