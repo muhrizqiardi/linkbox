@@ -73,7 +73,7 @@ func (s *service) CheckIsValid(token string) (TokenClaims, string, error) {
 		},
 	}
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, newClaims)
-	ss, err := newToken.SignedString(s.secret)
+	ss, err := newToken.SignedString([]byte(s.secret))
 	if err != nil {
 		return TokenClaims{}, "", err
 	}
