@@ -12,10 +12,10 @@ import (
 func Route(lg *log.Logger, us user.Service, as auth.Service) chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/register", HandleRegisterPage(lg))
+	r.Get("/register", HandleRegisterPage(lg, as))
 	r.Post("/register", HandleCreateUser(lg, us, as))
 
-	r.Get("/log-in", HandleLogInPage(lg))
+	r.Get("/log-in", HandleLogInPage(lg, as))
 	r.Post("/log-in", HandleAuthLogIn(lg, as))
 
 	// Needs Authentication
