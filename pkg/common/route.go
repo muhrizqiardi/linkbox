@@ -2,7 +2,6 @@ package common
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
@@ -22,7 +21,7 @@ func Route(lg *log.Logger, us user.Service, as auth.Service) chi.Router {
 	r.Group(func(r chi.Router) {
 		r.Use(auth.AuthMiddleware(lg, as))
 
-		r.Get("/", func(w http.ResponseWriter, r *http.Request) {})
+		r.Get("/", HandleIndexPage(lg))
 	})
 
 	return r
