@@ -10,6 +10,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
@@ -50,7 +51,8 @@ func main() {
 	fr := folder.NewRepository(db)
 	fs := folder.NewService(fr)
 	us := user.NewService(ur, fs)
-	r := common.Route(lg, us)
+	as := auth.NewService(us, os.Getenv("SECRET"))
+	r := common.Route(lg, us, as)
 
 	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
 	lg.Fatalln(http.ListenAndServe(addr, r))
