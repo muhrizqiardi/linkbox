@@ -4,6 +4,9 @@ import (
 	"embed"
 	"html/template"
 	"io"
+
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
 //go:embed *.html
@@ -37,6 +40,24 @@ func LogInPage(w io.Writer, data LogInPageData) error {
 	}
 
 	if err := tmpl.ExecuteTemplate(w, "log-in.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type IndexPageData struct {
+	User    user.UserEntity
+	Folders []folder.FolderEntity
+}
+
+func IndexPage(w io.Writer, data IndexPageData) error {
+	tmpl, err := template.ParseFS(tmplFS, "index.html")
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "index.html", data); err != nil {
 		return err
 	}
 
