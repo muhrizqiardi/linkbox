@@ -11,10 +11,12 @@ func AuthMiddleware(lg *log.Logger, as Service) func(next http.Handler) http.Han
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			cookie, err := r.Cookie("token")
 			if err != nil {
+				lg.Println("failed to get token cookie:", err)
 				http.Redirect(w, r, "/log-in", http.StatusSeeOther)
 			}
 			parsedToken, newToken, err := as.CheckIsValid(cookie.Value)
 			if err != nil {
+				lg.Println("failed to check token is valid:", err)
 				http.Redirect(w, r, "/log-in", http.StatusSeeOther)
 			}
 			newCookie := http.Cookie{
