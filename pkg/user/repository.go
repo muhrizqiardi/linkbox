@@ -49,7 +49,7 @@ func (r *repository) GetOneUserByID(id int) (UserEntity, error) {
 }
 
 func (r *repository) GetOneUserByUsername(username string) (UserEntity, error) {
-	stmt, err := r.db.Preparex(QueryCreateUser)
+	stmt, err := r.db.Preparex(QueryGetOneUserByUsername)
 	if err != nil {
 		return UserEntity{}, err
 	}
