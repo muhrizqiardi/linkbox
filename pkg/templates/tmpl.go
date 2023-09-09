@@ -25,3 +25,20 @@ func RegisterPage(w io.Writer, data RegisterPageData) error {
 
 	return nil
 }
+
+type LogInPageData struct {
+	Errors []string
+}
+
+func LogInPage(w io.Writer, data LogInPageData) error {
+	tmpl, err := template.ParseFS(tmplFS, "log-in.html")
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "log-in.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
