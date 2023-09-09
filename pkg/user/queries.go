@@ -7,10 +7,12 @@ const QueryCreateUser = `
 `
 const QueryGetOneUserByID = `
 	select id, username, password, created_at, updated_at		
+		from users
 		where id = $1;
 `
 const QueryGetOneUserByUsername = `
 	select id, username, password, created_at, updated_at		
+		from users
 		where username = $1;
 `
 const QueryUpdateOneUserByID = `
