@@ -14,7 +14,7 @@ var ErrInvalidUsername error = errors.New("Username can only contains alphanumer
 
 type Service interface {
 	LogIn(payload LogInDTO) (string, error)
-	CheckIsValid(token string) (string, error)
+	CheckIsValid(token string) (TokenClaims, string, error)
 }
 
 type service struct {
@@ -55,13 +55,13 @@ func (s *service) LogIn(payload LogInDTO) (string, error) {
 	return ss, nil
 }
 
-func (s *service) CheckIsValid(token string) (string, error) {
+func (s *service) CheckIsValid(token string) (TokenClaims, string, error) {
 	parsedToken, err := jwt.ParseWithClaims(token, &TokenClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(s.secret), nil
 	})
 	claims, ok := parsedToken.Claims.(*TokenClaims)
 	if !ok || !parsedToken.Valid {
-		return "", nil
+		return TokenClaims{}, "", nil
 	}
 
 	newClaims := TokenClaims{
@@ -75,8 +75,8 @@ func (s *service) CheckIsValid(token string) (string, error) {
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, newClaims)
 	ss, err := newToken.SignedString(s.secret)
 	if err != nil {
-		return "", err
+		return TokenClaims{}, "", err
 	}
 
-	return ss, nil
+	return *claims, ss, nil
 }
