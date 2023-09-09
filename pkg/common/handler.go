@@ -10,11 +10,27 @@ import (
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
-func HandleRegisterPage(lg *log.Logger) func(w http.ResponseWriter, r *http.Request) {
+func HandleRegisterPage(lg *log.Logger, as auth.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		existingCookie, err := r.Cookie("token")
+		if err == nil {
+			_, newToken, err := as.CheckIsValid(existingCookie.Value)
+			if err == nil {
+				lg.Println("user already authenticated, redirecting")
+				http.SetCookie(w, &http.Cookie{
+					Name:   "token",
+					Value:  newToken,
+					MaxAge: 8 * 24 * 60 * 60,
+				})
+				http.Redirect(w, r, "/", http.StatusSeeOther)
+				return
+			}
+		}
+
 		if err := templates.RegisterPage(w, templates.RegisterPageData{}); err != nil {
 			lg.Println("failed to render page:", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 	}
 }
@@ -52,11 +68,27 @@ func HandleCreateUser(lg *log.Logger, us user.Service, as auth.Service) func(w h
 		}
 		http.SetCookie(w, &cookie)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 }
 
-func HandleLogInPage(lg *log.Logger) func(w http.ResponseWriter, r *http.Request) {
+func HandleLogInPage(lg *log.Logger, as auth.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		existingCookie, err := r.Cookie("token")
+		if err == nil {
+			_, newToken, err := as.CheckIsValid(existingCookie.Value)
+			if err == nil {
+				lg.Println("user already authenticated, redirecting")
+				http.SetCookie(w, &http.Cookie{
+					Name:   "token",
+					Value:  newToken,
+					MaxAge: 8 * 24 * 60 * 60,
+				})
+				http.Redirect(w, r, "/", http.StatusSeeOther)
+				return
+			}
+		}
+
 		if err := templates.LogInPage(w, templates.LogInPageData{}); err != nil {
 			lg.Println("failed to render page:", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -93,5 +125,6 @@ func HandleAuthLogIn(lg *log.Logger, as auth.Service) func(w http.ResponseWriter
 		}
 		http.SetCookie(w, &cookie)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 }
