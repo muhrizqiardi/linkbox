@@ -11,12 +11,16 @@
 - User enters username, password, and confirm password fields
 - User submit account creation form
 - If user inputs are valid:
+  - system hashes the password
+  - system insert newly created user to database
   - system creates default folder belongs to the user, then
+  - system issues cookie
   - redirects to main menu
 - If user inputs are not valid, system shows error message
 
 #### Special Requirements
 
+- Username are case-insensitive
 - Inputs are valid only when:
   - username has minimum 3 characters and maximum 21 characters,
   - username only contains letters, alphabets, and underscores,
