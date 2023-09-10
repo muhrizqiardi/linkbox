@@ -52,7 +52,7 @@ func main() {
 	fs := folder.NewService(fr)
 	us := user.NewService(ur, fs)
 	as := auth.NewService(us, os.Getenv("SECRET"))
-	r := common.Route(lg, us, as)
+	r := common.Route(lg, us, as, fs)
 
 	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
 	lg.Fatalln(http.ListenAndServe(addr, r))
