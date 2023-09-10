@@ -20,25 +20,29 @@ const QueryGetOneFolderByUniqueName = `
 const QueryGetManyFolders_ByUpdatedAtASC = `
 	select id, user_id, unique_name, created_at, updated_at
 		from folders
-		order by updated_at asc, user_id = $3
+		where user_id = $3
+		order by updated_at asc
 		limit $1 offset $2;
 `
 const QueryGetManyFolders_ByUpdatedAtDESC = `
 	select id, user_id, unique_name, created_at, updated_at
 		from folders
-		order by updated_at desc, user_id = $3
+		where user_id = $3
+		order by updated_at desc
 		limit $1 offset $2;
 `
 const QueryGetManyFolders_ByCreatedAtASC = `
 	select id, user_id, unique_name, created_at, updated_at
 		from folders
-		order by created_at asc, user_id = $3
+		where user_id = $3
+		order by created_at asc
 		limit $1 offset $2;
 `
 const QueryGetManyFolders_ByCreatedAtDESC = `
 	select id, user_id, unique_name, created_at, updated_at
 		from folders
-		order by created_at desc, user_id = $3
+		where user_id = $3
+		order by created_at desc
 		limit $1 offset $2;
 `
 const QueryUpdateOneFolderByID = `
