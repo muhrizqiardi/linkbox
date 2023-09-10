@@ -6,13 +6,36 @@ import (
 
 	"github.com/gorilla/schema"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/templates"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
-func HandleIndexPage(lg *log.Logger) func(w http.ResponseWriter, r *http.Request) {
+func HandleIndexPage(lg *log.Logger, fs folder.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := templates.IndexPage(w, templates.IndexPageData{}); err != nil {
+		uCtx := r.Context().Value("user")
+		foundUser, ok := uCtx.(user.UserEntity)
+		if !ok {
+			lg.Println("failed to get user data passed from middleware")
+			http.Error(w, "", http.StatusInternalServerError)
+			return
+		}
+		folders, err := fs.GetMany(foundUser.ID, folder.GetManyFoldersDTO{
+			Sort:    folder.GetManyFoldersSortDescending,
+			OrderBy: folder.GetManyFoldersOrderByUpdatedAt,
+			Limit:   20,
+			Offset:  0,
+		})
+		if err != nil {
+			lg.Println("failed to find folders related to user", err)
+			http.Error(w, "", http.StatusNotFound)
+			return
+		}
+
+		if err := templates.IndexPage(w, templates.IndexPageData{
+			User:    foundUser,
+			Folders: folders,
+		}); err != nil {
 			lg.Println("failed to render page:", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
