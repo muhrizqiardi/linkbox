@@ -109,7 +109,7 @@ func (r *repository) GetManyFolders(limit int, offset int, sort string, orderBy 
 	}
 
 	var folders []FolderEntity
-	if err := stmt.Select(&folders, limit, offset); err != nil {
+	if err := stmt.Select(&folders, limit, offset, userID); err != nil {
 		return []FolderEntity{}, err
 	}
 
