@@ -3,39 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/dist/styles.css" />
+    <link href="/node_modules/material-symbols/index.css" rel="stylesheet" />
     <title>Home - Linkbox</title>
   </head>
   <body>
-    <aside>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/">Search</a></li>
-        <li><a href="/">New</a></li>
-      </ul>
-
-      <p>Folders</p>
-      <ul>
-        <li><a href="/">music</a></li>
-        <li><a href="/">entertainment</a></li>
-        <li><a href="/">university</a></li>
-        <li><a href="/">programming</a></li>
-      </ul>
-    </aside>
-
-    <main>
-      <article>
-        <p>How To Disappear Completely - Radiohead</p>
-        <p>
-          <a href="https://www.youtube.com/watch?v=TZIUtnWwcKg"
-            >www.youtube.com/watch?v=TZIUtnWwcKg</a
+    <div class="drawer md:drawer-open">
+      <input type="checkbox" id="main-drawer" class="drawer-toggle" />
+      <div class="drawer-content">
+        <nav class="navbar sticky top-0">
+          <label
+            for="main-drawer"
+            class="btn btn-ghost btn-square mr-4 md:hidden"
           >
-        </p>
-        <p>
-          ////RadioheadHow to Disappear CompletelyLive at Saitama Super Arena,
-          Saitama, Japan 05.10.2008lyrics:That there, that's not meI go where I
-          pleaseI walk throu...
-        </p>
-      </article>
-    </main>
+            <span class="material-symbols-outlined">menu</span>
+          </label>
+          <a href="" class="btn btn-ghost btn-square ml-auto">
+            <span class="material-symbols-outlined">sort</span>
+          </a>
+        </nav>
+        <div class="p-4">
+          <article class="card card-compact bg-base-200">
+            <div class="card-body">
+              <p class="mb-0.5">How To Disappear Completely - Radiohead</p>
+              <p>
+                <a
+                  href="https://www.youtube.com/watch?v=TZIUtnWwcKg"
+                  class="text-xs"
+                >
+                  www.youtube.com/watch?v=TZIUtnWwcKg
+                </a>
+              </p>
+              <p>
+                ////RadioheadHow to Disappear CompletelyLive at Saitama Super
+                Arena, Saitama, Japan 05.10.2008lyrics:That there, that's not
+                meI go where I pleaseI walk throu...
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="drawer-side">
+        <label for="main-drawer" class="drawer-overlay"></label>
+        <div class="w-80 min-h-full bg-base-200 text-base-content">
+          <ul class="menu">
+            <li class="sidebar__item"><a href="/">Home</a></li>
+            <li class="sidebar__item"><a href="/">Search</a></li>
+            <li class="sidebar__item"><a href="/">New</a></li>
+          </ul>
+
+          <ul class="menu">
+            <li class="menu-title">Folders</li>
+            {{range $e := .Folders}}
+            <li><a href="/">{{$e.UniqueName}}</a></li>
+            {{end}}
+          </ul>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
