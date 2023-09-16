@@ -1,6 +1,7 @@
 package common
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -169,8 +170,8 @@ func HandleCreateLink(lg *log.Logger, ls link.Service) func(w http.ResponseWrite
 		if err != nil {
 			lg.Println("failed to create link:", err)
 		}
-		linkIDStr := strconv.Itoa(link.ID)
-		http.Redirect(w, r, "/#"+linkIDStr, http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/folders/%d/links#%d", link.FolderID, link.ID), http.StatusSeeOther)
+		return
 	}
 }
 
@@ -232,6 +233,30 @@ func HandleCreateUser(lg *log.Logger, us user.Service, as auth.Service) func(w h
 		}
 		http.SetCookie(w, &cookie)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+}
+
+func HandleCreateFolder(lg *log.Logger, fs folder.Service, as auth.Service) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			lg.Println("failed to parse form body:", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		var payload folder.CreateFolderDTO
+		if err := schema.NewDecoder().Decode(&payload, r.PostForm); err != nil {
+			lg.Println("failed to decode form body into a struct:", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		f, err := fs.Create(payload)
+		if err != nil {
+			lg.Println("failed to create folder:", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		http.Redirect(w, r, fmt.Sprintf("/folders/%d/links", f.ID), http.StatusSeeOther)
 		return
 	}
 }
