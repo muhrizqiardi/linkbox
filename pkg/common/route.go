@@ -30,6 +30,7 @@ func Route(lg *log.Logger, us user.Service, as auth.Service, fs folder.Service, 
 		r.Get("/", HandleIndexPage(lg, fs, ls))
 		r.Get("/folders/{folderID}/links", HandleLinksInFolderPage(lg, ls, fs))
 		r.Post("/links", HandleCreateLink(lg, ls))
+		r.Post("/folders", HandleCreateFolder(lg, fs, as))
 	})
 
 	return r
