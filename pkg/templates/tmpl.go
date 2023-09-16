@@ -65,21 +65,3 @@ func IndexPage(w io.Writer, data IndexPageData) error {
 
 	return nil
 }
-
-type NewLinkPageData struct {
-	User    user.UserEntity
-	Folders []folder.FolderEntity
-}
-
-func NewLinkPage(w io.Writer, data NewLinkPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "new-link.html")
-	if err != nil {
-		return err
-	}
-
-	if err := tmpl.ExecuteTemplate(w, "new-link.html", data); err != nil {
-		return err
-	}
-
-	return nil
-}

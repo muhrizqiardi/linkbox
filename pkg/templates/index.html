@@ -78,7 +78,7 @@
           <ul class="menu">
             <li><a href="/">Home</a></li>
             <li><a href="/search">Search</a></li>
-            <li><a href="/link/new">New</a></li>
+            <li><button onclick="new_link_modal.showModal()">New</button></li>
             <li></li>
             <li><a href="/" class="text-error">Log out</a></li>
           </ul>
@@ -92,5 +92,50 @@
         </div>
       </div>
     </div>
+    <dialog id="new_link_modal" class="modal modal-bottom sm:modal-middle">
+      <form action="/links" method="post" class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Create new link</h3>
+        <div class="grid grid-cols-4 mb-2">
+          <label for="url" class="col-span-1">URL</label>
+          <input
+            type="url"
+            name="URL"
+            class="col-span-3 input input-sm input-bordered"
+          />
+        </div>
+        <div class="grid grid-cols-4 mb-2">
+          <label for="title" class="col-span-1">Title</label>
+          <input
+            type="text"
+            name="title"
+            class="col-span-3 input input-sm input-bordered"
+          />
+        </div>
+        <div class="grid grid-cols-4 mb-2">
+          <label for="description" class="col-span-1">Description</label>
+          <input
+            type="text"
+            name="description"
+            class="col-span-3 input input-sm input-bordered"
+          />
+        </div>
+        <div class="grid grid-cols-4 mb-2">
+          <label for="folderId" class="col-span-1">Folder</label>
+          <select
+            name="folderId"
+            class="col-span-3 select select-sm select-bordered"
+          >
+            <option>Choose folder...</option>
+            {{range $i := .Folders}}
+            <option value="{{$i.ID}}">{{$i.UniqueName}}</option>
+            {{end}}
+          </select>
+        </div>
+        <input type="hidden" name="userId" value="{{.User.ID}}" />
+        <div class="modal-action">
+          <button class="btn">Save</button>
+        </div>
+      </form>
+    </dialog>
   </body>
 </html>
