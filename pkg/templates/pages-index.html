@@ -5,7 +5,7 @@
     <div class="drawer md:drawer-open">
       <input type="checkbox" id="main-drawer" class="drawer-toggle" />
       <div class="drawer-content">
-        {{template "navbar" .}}
+        {{template "indexPageNavbar" .}}
 
         <div class="p-4">
           {{if .Links}} {{range $link := .Links}}
@@ -27,6 +27,6 @@
       </div>
       {{template "sidebar" .}}
     </div>
-    {{template "newLinkModal" .}}
+    {{template "newLinkModal" .}} {{template "newFolderModal" .}}
   </body>
 </html>

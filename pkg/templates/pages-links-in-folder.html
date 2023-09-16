@@ -1,59 +1,12 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/dist/styles.css" />
-    <link href="/node_modules/material-symbols/index.css" rel="stylesheet" />
-    <title>Home - Linkbox</title>
-  </head>
+  {{template "head" .}}
   <body>
     <script src="/node_modules/htmx.org/dist/htmx.min.js"></script>
     <div class="drawer md:drawer-open">
       <input type="checkbox" id="main-drawer" class="drawer-toggle" />
       <div class="drawer-content">
-        <nav class="navbar sticky top-0 px-4">
-          <label
-            for="main-drawer"
-            class="btn btn-ghost btn-square mr-4 md:hidden"
-          >
-            <span class="material-symbols-outlined">menu</span>
-          </label>
-
-          <p class="text-lg font-semibold">Home</p>
-
-          <div class="ml-auto">
-            <details class="dropdown dropdown-end">
-              <summary class="btn btn-ghost btn-square">
-                <span class="material-symbols-outlined">sort</span>
-              </summary>
-              <ul
-                class="menu dropdown-content z-[1] bg-base-200 rounded-xl w-80"
-              >
-                <li>
-                  <a href="?orderBy=created_at&sort=asc"
-                    >Creation date (ascending)</a
-                  >
-                </li>
-                <li>
-                  <a href="?orderBy=created_at&sort=asc"
-                    >Creation date (descending)</a
-                  >
-                </li>
-                <li>
-                  <a href="?orderBy=updated_at&sort=desc"
-                    >Modified date (ascending)</a
-                  >
-                </li>
-                <li>
-                  <a href="?orderBy=updated_at&sort=desc"
-                    >Modified date (descending)</a
-                  >
-                </li>
-              </ul>
-            </details>
-          </div>
-        </nav>
+        {{template "navbar" .}}
 
         <div class="p-4">
           {{if .Links}} {{range $link := .Links}}
@@ -73,71 +26,8 @@
           {{end}} {{end}}
         </div>
       </div>
-      <div class="drawer-side">
-        <label for="main-drawer" class="drawer-overlay"></label>
-        <div class="w-80 min-h-full bg-base-200 text-base-content">
-          <ul class="menu" hx-boost="true">
-            <li><a href="/">Home</a></li>
-            <li><a href="/search">Search</a></li>
-            <li><button onclick="new_link_modal.showModal()">New</button></li>
-            <li></li>
-            <li><a href="/" class="text-error">Log out</a></li>
-          </ul>
-
-          <ul class="menu" hx-boost="true">
-            <li class="menu-title">Folders</li>
-            {{range $e := .Folders}}
-            <li><a href="/folders/{{$e.ID}}/links">{{$e.UniqueName}}</a></li>
-            {{end}}
-          </ul>
-        </div>
-      </div>
+      {{template "sidebar" .}}
     </div>
-    <dialog id="new_link_modal" class="modal modal-bottom sm:modal-middle">
-      <form action="/links" method="post" class="modal-box">
-        <h3 class="font-bold text-lg mb-4">Create new link</h3>
-        <div class="grid grid-cols-4 mb-2">
-          <label for="url" class="col-span-1">URL</label>
-          <input
-            type="url"
-            name="URL"
-            class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
-          />
-        </div>
-        <div class="grid grid-cols-4 mb-2">
-          <label for="title" class="col-span-1">Title</label>
-          <input
-            type="text"
-            name="title"
-            class="col-span-3 input input-sm input-bordered"
-          />
-        </div>
-        <div class="grid grid-cols-4 mb-2">
-          <label for="description" class="col-span-1">Description</label>
-          <input
-            type="text"
-            name="description"
-            class="col-span-3 input input-sm input-bordered"
-          />
-        </div>
-        <div class="grid grid-cols-4 mb-2">
-          <label for="folderId" class="col-span-1">Folder</label>
-          <select
-            name="folderId"
-            class="col-span-3 select select-sm select-bordered"
-          >
-            <option>Choose folder...</option>
-            {{range $i := .Folders}}
-            <option value="{{$i.ID}}">{{$i.UniqueName}}</option>
-            {{end}}
-          </select>
-        </div>
-        <input type="hidden" name="userId" value="{{.User.ID}}" />
-        <div class="modal-action">
-          <button class="btn btn-ghost" formmethod="dialog">Cancel</button>
-          <button class="btn">Save</button>
-        </div>
-      </form>
-    </dialog>
+    {{template "newLinkModal" .}} {{template "newFolderModal" .}}
   </body>
 </html>

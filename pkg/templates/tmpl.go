@@ -54,7 +54,7 @@ type IndexPageData struct {
 }
 
 func IndexPage(w io.Writer, data IndexPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "pages-index.html", "partials-head.html", "partials-new-link-modal.html", "partials-sidebar.html", "partials-navbar.html")
+	tmpl, err := template.ParseFS(tmplFS, "pages-index.html", "partials-head.html", "partials-new-link-modal.html", "partials-sidebar.html", "partials-index-page-navbar.html", "partials-new-folder-modal.html")
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ type LinksInFolderPageData struct {
 }
 
 func LinksInFolderPage(w io.Writer, data LinksInFolderPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "pages-links-in-folder.html", "partials-head.html")
+	tmpl, err := template.ParseFS(tmplFS, "pages-links-in-folder.html", "partials-head.html", "partials-new-link-modal.html", "partials-sidebar.html", "partials-navbar.html", "partials-new-folder-modal.html")
 	if err != nil {
 		return err
 	}
