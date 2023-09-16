@@ -56,22 +56,13 @@
 
         <div class="p-4">
           {{if .Links}} {{range $link := .Links}}
-          <article id="{{$link.ID}}" class="card card-compact bg-base-200">
+          <article id="{{$link.ID}}" class="card card-compact bg-base-200 mb-4">
             <div class="card-body">
-              <p class="mb-0.5">How To Disappear Completely - Radiohead</p>
+              <p class="mb-0.5">{{$link.Title}}</p>
               <p>
-                <a
-                  href="https://www.youtube.com/watch?v=TZIUtnWwcKg"
-                  class="text-xs"
-                >
-                  www.youtube.com/watch?v=TZIUtnWwcKg
-                </a>
+                <a href="{{$link.URL}}" class="text-xs"> {{$link.URL}} </a>
               </p>
-              <p>
-                ////RadioheadHow to Disappear CompletelyLive at Saitama Super
-                Arena, Saitama, Japan 05.10.2008lyrics:That there, that's not
-                meI go where I pleaseI walk throu...
-              </p>
+              <p>{{$link.Description}}</p>
             </div>
           </article>
           {{else}}
