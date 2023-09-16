@@ -4,33 +4,44 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/page"
 )
 
-func Route(lg *log.Logger, us user.Service, as auth.Service, fs folder.Service, ls link.Service) chi.Router {
+func Route(
+	lg *log.Logger,
+	ph page.Handler,
+	ah auth.Handler,
+	am auth.Middleware,
+	lh link.Handler,
+	fh folder.Handler,
+) chi.Router {
 	r := chi.NewRouter()
 
 	r.Handle("/dist/*", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist"))))
 	r.Handle("/node_modules/*", http.StripPrefix("/node_modules/", http.FileServer(http.Dir("./node_modules"))))
 
-	r.Get("/register", HandleRegisterPage(lg, as))
-	r.Post("/register", HandleCreateUser(lg, us, as))
+	r.Get("/register", ph.HandleRegisterPage)
+	r.Post("/register", ah.HandleCreateUserAndLogIn)
 
-	r.Get("/log-in", HandleLogInPage(lg, as))
-	r.Post("/log-in", HandleAuthLogIn(lg, as))
+	r.Get("/log-in", ph.HandleLogInPage)
+	r.Post("/log-in", ah.HandleAuthLogIn)
+
+	r.Get("/auth/delete", ah.HandleLogOut)
 
 	// Needs Authentication
 	r.Group(func(r chi.Router) {
-		r.Use(auth.AuthMiddleware(lg, as, us))
+		r.Use(
+			am.OnlyAllowRegisteredUser,
+		)
 
-		r.Get("/", HandleIndexPage(lg, fs, ls))
-		r.Get("/folders/{folderID}/links", HandleLinksInFolderPage(lg, ls, fs))
-		r.Post("/links", HandleCreateLink(lg, ls))
-		r.Post("/folders", HandleCreateFolder(lg, fs, as))
+		r.Get("/", ph.HandleIndexPage)
+		r.Post("/folders", fh.HandleCreateFolder)
+		r.Get("/folders/{folderID}/links", ph.HandleLinksInFolderPage)
+		r.Post("/links", lh.HandleCreateLink)
 	})
 
 	return r

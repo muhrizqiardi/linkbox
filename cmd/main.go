@@ -14,6 +14,7 @@ import (
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/page"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
@@ -55,7 +56,12 @@ func main() {
 	fs := folder.NewService(fr)
 	us := user.NewService(ur, fs)
 	as := auth.NewService(us, os.Getenv("SECRET"))
-	r := common.Route(lg, us, as, fs, ls)
+	ah := auth.NewHandler(lg, as, us)
+	am := auth.NewMiddleware(lg, as, us)
+	lh := link.NewHandler(lg, ls)
+	fh := folder.NewHandler(lg, fs)
+	ph := page.NewHandler(lg, fs, ls, as)
+	r := common.Route(lg, *ph, *ah, *am, *lh, *fh)
 
 	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
 	lg.Fatalln(http.ListenAndServe(addr, r))
