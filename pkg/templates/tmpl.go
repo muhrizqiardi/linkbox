@@ -18,12 +18,12 @@ type RegisterPageData struct {
 }
 
 func RegisterPage(w io.Writer, data RegisterPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "register.html")
+	tmpl, err := template.ParseFS(tmplFS, "pages-register.html")
 	if err != nil {
 		return err
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "register.html", data); err != nil {
+	if err := tmpl.ExecuteTemplate(w, "pages-register.html", data); err != nil {
 		return err
 	}
 
@@ -35,12 +35,12 @@ type LogInPageData struct {
 }
 
 func LogInPage(w io.Writer, data LogInPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "log-in.html")
+	tmpl, err := template.ParseFS(tmplFS, "pages-log-in.html")
 	if err != nil {
 		return err
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "log-in.html", data); err != nil {
+	if err := tmpl.ExecuteTemplate(w, "pages-log-in.html", data); err != nil {
 		return err
 	}
 
@@ -54,12 +54,32 @@ type IndexPageData struct {
 }
 
 func IndexPage(w io.Writer, data IndexPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "index.html")
+	tmpl, err := template.ParseFS(tmplFS, "pages-index.html", "partials-head.html", "partials-new-link-modal.html", "partials-sidebar.html", "partials-navbar.html")
 	if err != nil {
 		return err
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "index.html", data); err != nil {
+	if err := tmpl.ExecuteTemplate(w, "pages-index.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type LinksInFolderPageData struct {
+	User    user.UserEntity
+	Folder  folder.FolderEntity
+	Folders []folder.FolderEntity
+	Links   []link.LinkEntity
+}
+
+func LinksInFolderPage(w io.Writer, data LinksInFolderPageData) error {
+	tmpl, err := template.ParseFS(tmplFS, "pages-links-in-folder.html", "partials-head.html")
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "pages-links-in-folder.html", data); err != nil {
 		return err
 	}
 

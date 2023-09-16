@@ -1,0 +1,21 @@
+{{define "sidebar"}}
+<div class="drawer-side">
+  <label for="main-drawer" class="drawer-overlay"></label>
+  <div class="w-80 min-h-full bg-base-200 text-base-content">
+    <ul class="menu" hx-boost="true">
+      <li><a href="/">Home</a></li>
+      <li><a href="/search">Search</a></li>
+      <li><button onclick="new_link_modal.showModal()">New</button></li>
+      <li></li>
+      <li><a href="/" class="text-error">Log out</a></li>
+    </ul>
+
+    <ul class="menu">
+      <li class="menu-title">Folders</li>
+      {{range $e := .Folders}}
+      <li><a href="/folders/{{$e.ID}}/links">{{$e.UniqueName}}</a></li>
+      {{end}}
+    </ul>
+  </div>
+</div>
+{{end}}

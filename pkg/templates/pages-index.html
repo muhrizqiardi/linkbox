@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  {{template "head" .}}
+  <body>
+    <div class="drawer md:drawer-open">
+      <input type="checkbox" id="main-drawer" class="drawer-toggle" />
+      <div class="drawer-content">
+        {{template "navbar" .}}
+
+        <div class="p-4">
+          {{if .Links}} {{range $link := .Links}}
+          <article id="{{$link.ID}}" class="card card-compact bg-base-200 mb-4">
+            <div class="card-body">
+              <p class="mb-0.5">{{$link.Title}}</p>
+              <p>
+                <a href="{{$link.URL}}" class="text-xs"> {{$link.URL}} </a>
+              </p>
+              <p>{{$link.Description}}</p>
+            </div>
+          </article>
+          {{else}}
+          <div class="flex flex-cols items-center p-16">
+            <p class="text-center">Empty</p>
+          </div>
+          {{end}} {{end}}
+        </div>
+      </div>
+      {{template "sidebar" .}}
+    </div>
+    {{template "newLinkModal" .}}
+  </body>
+</html>

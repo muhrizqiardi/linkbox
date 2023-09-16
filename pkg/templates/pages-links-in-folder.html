@@ -8,6 +8,7 @@
     <title>Home - Linkbox</title>
   </head>
   <body>
+    <script src="/node_modules/htmx.org/dist/htmx.min.js"></script>
     <div class="drawer md:drawer-open">
       <input type="checkbox" id="main-drawer" class="drawer-toggle" />
       <div class="drawer-content">
@@ -75,7 +76,7 @@
       <div class="drawer-side">
         <label for="main-drawer" class="drawer-overlay"></label>
         <div class="w-80 min-h-full bg-base-200 text-base-content">
-          <ul class="menu">
+          <ul class="menu" hx-boost="true">
             <li><a href="/">Home</a></li>
             <li><a href="/search">Search</a></li>
             <li><button onclick="new_link_modal.showModal()">New</button></li>
@@ -83,10 +84,10 @@
             <li><a href="/" class="text-error">Log out</a></li>
           </ul>
 
-          <ul class="menu">
+          <ul class="menu" hx-boost="true">
             <li class="menu-title">Folders</li>
             {{range $e := .Folders}}
-            <li><a href="/">{{$e.UniqueName}}</a></li>
+            <li><a href="/folders/{{$e.ID}}/links">{{$e.UniqueName}}</a></li>
             {{end}}
           </ul>
         </div>
@@ -100,7 +101,7 @@
           <input
             type="url"
             name="URL"
-            class="col-span-3 input input-sm input-bordered"
+            class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
           />
         </div>
         <div class="grid grid-cols-4 mb-2">
@@ -133,6 +134,7 @@
         </div>
         <input type="hidden" name="userId" value="{{.User.ID}}" />
         <div class="modal-action">
+          <button class="btn btn-ghost" formmethod="dialog">Cancel</button>
           <button class="btn">Save</button>
         </div>
       </form>

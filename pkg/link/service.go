@@ -96,7 +96,7 @@ func (s *service) GetManyInsideFolder(userID int, folderId int, payload GetManyL
 			return []LinkEntity{}, ErrInvalidSortMethod
 		}
 	case OrderByUpdatedAt:
-		switch payload.OrderBy {
+		switch payload.Sort {
 		case SortASC:
 		case SortDESC:
 			break
