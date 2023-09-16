@@ -35,8 +35,7 @@ func setupDB() (*sqlx.DB, error) {
 }
 
 func main() {
-	// lg := log.New(os.Stdout, "linkbox | ", log.LstdFlags)
-	lg := log.Default()
+	lg := log.New(os.Stdout, "linkbox | ", log.LstdFlags)
 
 	if err := godotenv.Load(); err != nil {
 		lg.Fatalln("failed to retrieve environment variables:", err)
