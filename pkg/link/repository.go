@@ -22,12 +22,14 @@ type Repository interface {
 	) (LinkEntity, error)
 	GetOneLinkByID(id int) (LinkEntity, error)
 	GetManyLinksInsideDefaultFolder(
+		userID int,
 		limit int,
 		offset int,
 		orderBy string,
 		sort string,
 	) ([]LinkEntity, error)
 	GetManyLinksInsideFolder(
+		userID int,
 		folder_id int,
 		limit int,
 		offset int,
@@ -88,6 +90,7 @@ func (r *repository) GetOneLinkByID(id int) (LinkEntity, error) {
 }
 
 func (r *repository) GetManyLinksInsideDefaultFolder(
+	userID int,
 	limit int,
 	offset int,
 	orderBy string,
@@ -116,7 +119,6 @@ func (r *repository) GetManyLinksInsideDefaultFolder(
 		}
 		break
 	}
-	println(q)
 
 	stmt, err := r.db.Preparex(q)
 	if err != nil {
@@ -124,7 +126,7 @@ func (r *repository) GetManyLinksInsideDefaultFolder(
 	}
 
 	var link []LinkEntity
-	if err := stmt.Select(&link, limit, offset); err != nil {
+	if err := stmt.Select(&link, userID, limit, offset); err != nil {
 		return []LinkEntity{}, err
 	}
 
@@ -132,6 +134,7 @@ func (r *repository) GetManyLinksInsideDefaultFolder(
 }
 
 func (r *repository) GetManyLinksInsideFolder(
+	userID int,
 	folderId int,
 	limit int,
 	offset int,
@@ -168,7 +171,7 @@ func (r *repository) GetManyLinksInsideFolder(
 	}
 
 	var link []LinkEntity
-	if err := stmt.Select(&link, folderId, limit, offset); err != nil {
+	if err := stmt.Select(&link, userID, folderId, limit, offset); err != nil {
 		return []LinkEntity{}, err
 	}
 

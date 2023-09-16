@@ -14,74 +14,90 @@ const QueryGetOneLinkByID = `
 const QueryGetManyLinksInsideDefaultFolder_OrderByCreatedAtSortASC = `
 	with default_folder as (
 		select id from folders
-			where unique_name = 'default'
+			where
+				user_id = $1 and 
+				unique_name = 'default'
 	)
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
 		where folder_id = (select id from default_folder)
 		order by created_at asc
-		limit $1 offset $2;
+		limit $2 offset $3;
 `
 const QueryGetManyLinksInsideDefaultFolder_OrderByCreatedAtSortDESC = `
 	with default_folder as (
 		select id from folders
-			where unique_name = 'default'
+			where
+				user_id = $1 and 
+				unique_name = 'default'
 	)
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
 		where folder_id = (select id from default_folder)
 		order by created_at desc
-		limit $1 offset $2;
+		limit $2 offset $3;
 `
 const QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortASC = `
 	with default_folder as (
 		select id from folders
-			where unique_name = 'default'
+			where
+				user_id = $1 and 
+				unique_name = 'default'
 	)
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
 		where folder_id = (select id from default_folder)
 		order by updated_at asc
-		limit $1 offset $2;
+		limit $2 offset $3;
 `
 const QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortDESC = `
 	with default_folder as (
 		select id from folders
-			where unique_name = 'default'
+			where
+				user_id = $1 and 
+				unique_name = 'default'
 	)
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
 		where folder_id = (select id from default_folder)
 		order by updated_at desc
-		limit $1 offset $2;
+		limit $2 offset $3;
 `
 const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortASC = `
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
-		where folder_id = (select id from default_folder)
+		where 
+			user_id = $1 and
+			folder_id = $2
 		order by created_at asc
-		limit $1 offset $2;
+		limit $3 offset $4;
 `
 const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortDESC = `
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
-		where folder_id = (select id from default_folder)
+		where 
+			user_id = $1 and
+			folder_id = $2
 		order by created_at desc
-		limit $1 offset $2;
+		limit $3 offset $4;
 `
 const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortASC = `
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
-		where folder_id = (select id from default_folder)
+		where 
+			user_id = $1 and
+			folder_id = $2
 		order by updated_at asc
-		limit $1 offset $2;
+		limit $3 offset $4;
 `
 const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortDESC = `
 	select id, url, title, description, user_id, folder_id, created_at, updated_at
 		from links
-		where folder_id = (select id from default_folder)
+		where 
+			user_id = $1 and
+			folder_id = $2
 		order by updated_at desc
-		limit $1 offset $2;
+		limit $3 offset $4;
 `
 const QueryUpdateOneLinkByID = `
 	update links

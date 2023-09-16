@@ -10,8 +10,8 @@ var ErrInvalidSortMethod = errors.New("\"sort\" should either be \"asc\" \"desc\
 type Service interface {
 	Create(payload CreateLinkDTO) (LinkEntity, error)
 	GetOneByID(id int) (LinkEntity, error)
-	GetManyInsideDefaultFolder(payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
-	GetManyInsideFolder(folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
+	GetManyInsideDefaultFolder(userID int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
+	GetManyInsideFolder(userID int, folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
 	UpdateOneByID(id int, payload UpdateLinkDTO) (LinkEntity, error)
 	DeleteOneByID(id int) (LinkEntity, error)
 }
@@ -49,7 +49,7 @@ func (s *service) GetOneByID(id int) (LinkEntity, error) {
 	return link, nil
 }
 
-func (s *service) GetManyInsideDefaultFolder(payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error) {
+func (s *service) GetManyInsideDefaultFolder(userID int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error) {
 	switch payload.OrderBy {
 	case OrderByCreatedAt:
 		switch payload.Sort {
@@ -72,6 +72,7 @@ func (s *service) GetManyInsideDefaultFolder(payload GetManyLinksInsideFolderDTO
 	}
 
 	links, err := s.repo.GetManyLinksInsideDefaultFolder(
+		userID,
 		payload.Limit,
 		payload.Offset,
 		payload.OrderBy,
@@ -84,7 +85,7 @@ func (s *service) GetManyInsideDefaultFolder(payload GetManyLinksInsideFolderDTO
 	return links, nil
 }
 
-func (s *service) GetManyInsideFolder(folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error) {
+func (s *service) GetManyInsideFolder(userID int, folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error) {
 	switch payload.OrderBy {
 	case OrderByCreatedAt:
 		switch payload.Sort {
@@ -107,6 +108,7 @@ func (s *service) GetManyInsideFolder(folderId int, payload GetManyLinksInsideFo
 	}
 
 	links, err := s.repo.GetManyLinksInsideFolder(
+		userID,
 		folderId,
 		payload.Limit,
 		payload.Offset,

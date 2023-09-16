@@ -51,7 +51,7 @@ func HandleIndexPage(lg *log.Logger, fs folder.Service, ls link.Service) func(w 
 			return
 		}
 
-		links, err := ls.GetManyInsideDefaultFolder(link.GetManyLinksInsideFolderDTO{
+		links, err := ls.GetManyInsideDefaultFolder(foundUser.ID, link.GetManyLinksInsideFolderDTO{
 			Limit:   itemPerPage,
 			Offset:  (page - 1) * itemPerPage,
 			OrderBy: orderBy,
