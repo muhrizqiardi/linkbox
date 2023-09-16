@@ -15,11 +15,20 @@ func AuthMiddleware(lg *log.Logger, as Service, us user.Service) func(next http.
 			if err != nil {
 				lg.Println("failed to get token cookie:", err)
 				http.Redirect(w, r, "/log-in", http.StatusSeeOther)
+				return
 			}
 			parsedToken, newToken, err := as.CheckIsValid(cookie.Value)
 			if err != nil {
 				lg.Println("failed to check token is valid:", err)
+				c := &http.Cookie{
+					Name:   "token",
+					Value:  "",
+					Path:   "/",
+					MaxAge: -1,
+				}
+				http.SetCookie(w, c)
 				http.Redirect(w, r, "/log-in", http.StatusSeeOther)
+				return
 			}
 			newCookie := http.Cookie{
 				Name:   "token",
@@ -31,6 +40,15 @@ func AuthMiddleware(lg *log.Logger, as Service, us user.Service) func(next http.
 			foundUser, err := us.GetOneByID(parsedToken.UserID)
 			if err != nil {
 				lg.Println("user not found, user not authenticated:", err)
+				c := &http.Cookie{
+					Name:   "token",
+					Value:  "",
+					Path:   "/",
+					MaxAge: -1,
+				}
+				http.SetCookie(w, c)
+				http.Redirect(w, r, "/log-in", http.StatusSeeOther)
+				return
 			}
 
 			ctx := context.WithValue(r.Context(), "user", foundUser)

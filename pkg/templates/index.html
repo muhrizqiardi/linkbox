@@ -11,19 +11,52 @@
     <div class="drawer md:drawer-open">
       <input type="checkbox" id="main-drawer" class="drawer-toggle" />
       <div class="drawer-content">
-        <nav class="navbar sticky top-0">
+        <nav class="navbar sticky top-0 px-4">
           <label
             for="main-drawer"
             class="btn btn-ghost btn-square mr-4 md:hidden"
           >
             <span class="material-symbols-outlined">menu</span>
           </label>
-          <a href="" class="btn btn-ghost btn-square ml-auto">
-            <span class="material-symbols-outlined">sort</span>
-          </a>
+
+          <p class="text-lg font-semibold">Home</p>
+
+          <div class="ml-auto">
+            <details class="dropdown dropdown-end">
+              <summary class="btn btn-ghost btn-square">
+                <span class="material-symbols-outlined">sort</span>
+              </summary>
+              <ul
+                class="menu dropdown-content z-[1] bg-base-200 rounded-xl w-80"
+              >
+                <li>
+                  <a href="?orderBy=created_at&sort=asc"
+                    >Creation date (ascending)</a
+                  >
+                </li>
+                <li>
+                  <a href="?orderBy=created_at&sort=asc"
+                    >Creation date (descending)</a
+                  >
+                </li>
+                <li>
+                  <a href="?orderBy=updated_at&sort=desc"
+                    >Modified date (ascending)</a
+                  >
+                </li>
+                <li>
+                  <a href="?orderBy=updated_at&sort=desc"
+                    >Modified date (descending)</a
+                  >
+                </li>
+              </ul>
+            </details>
+          </div>
         </nav>
+
         <div class="p-4">
-          <article class="card card-compact bg-base-200">
+          {{if .Links}} {{range $link := .Links}}
+          <article id="{{$link.ID}}" class="card card-compact bg-base-200">
             <div class="card-body">
               <p class="mb-0.5">How To Disappear Completely - Radiohead</p>
               <p>
@@ -41,15 +74,22 @@
               </p>
             </div>
           </article>
+          {{else}}
+          <div class="flex flex-cols items-center p-16">
+            <p class="text-center">Empty</p>
+          </div>
+          {{end}} {{end}}
         </div>
       </div>
       <div class="drawer-side">
         <label for="main-drawer" class="drawer-overlay"></label>
         <div class="w-80 min-h-full bg-base-200 text-base-content">
           <ul class="menu">
-            <li class="sidebar__item"><a href="/">Home</a></li>
-            <li class="sidebar__item"><a href="/">Search</a></li>
-            <li class="sidebar__item"><a href="/">New</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/">Search</a></li>
+            <li><a href="/">New</a></li>
+            <li></li>
+            <li><a href="/" class="text-error">Log out</a></li>
           </ul>
 
           <ul class="menu">

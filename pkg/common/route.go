@@ -7,10 +7,11 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
-func Route(lg *log.Logger, us user.Service, as auth.Service, fs folder.Service) chi.Router {
+func Route(lg *log.Logger, us user.Service, as auth.Service, fs folder.Service, ls link.Service) chi.Router {
 	r := chi.NewRouter()
 
 	r.Handle("/dist/*", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist"))))
@@ -26,7 +27,9 @@ func Route(lg *log.Logger, us user.Service, as auth.Service, fs folder.Service) 
 	r.Group(func(r chi.Router) {
 		r.Use(auth.AuthMiddleware(lg, as, us))
 
-		r.Get("/", HandleIndexPage(lg, fs))
+		r.Get("/", HandleIndexPage(lg, fs, ls))
+		r.Get("/link/new", HandleNewLinkPage(lg, ls, fs))
+		r.Post("/links", HandleCreateLink(lg, ls))
 	})
 
 	return r

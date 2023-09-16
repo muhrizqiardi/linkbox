@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
@@ -49,6 +50,7 @@ func LogInPage(w io.Writer, data LogInPageData) error {
 type IndexPageData struct {
 	User    user.UserEntity
 	Folders []folder.FolderEntity
+	Links   []link.LinkEntity
 }
 
 func IndexPage(w io.Writer, data IndexPageData) error {
@@ -58,6 +60,24 @@ func IndexPage(w io.Writer, data IndexPageData) error {
 	}
 
 	if err := tmpl.ExecuteTemplate(w, "index.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type NewLinkPageData struct {
+	User    user.UserEntity
+	Folders []folder.FolderEntity
+}
+
+func NewLinkPage(w io.Writer, data NewLinkPageData) error {
+	tmpl, err := template.ParseFS(tmplFS, "new-link.html")
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "new-link.html", data); err != nil {
 		return err
 	}
 
