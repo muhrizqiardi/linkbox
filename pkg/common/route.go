@@ -42,6 +42,8 @@ func Route(
 		r.Post("/folders", fh.HandleCreateFolder)
 		r.Get("/folders/{folderID}/links", ph.HandleLinksInFolderPage)
 		r.Post("/links", lh.HandleCreateLink)
+		r.Get("/links/{linkID}/edit", ph.HandleEditLinkModalFragment)
+		r.Put("/links/{linkID}", lh.HandleUpdateLink)
 	})
 
 	return r

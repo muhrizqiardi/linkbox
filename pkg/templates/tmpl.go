@@ -88,3 +88,29 @@ func (t *Templates) LinksInFolderPage(w io.Writer, data LinksInFolderPageData) e
 
 	return nil
 }
+
+type LinkFragmentData struct {
+	Link link.LinkEntity
+}
+
+func (t *Templates) LinkFragment(w io.Writer, data struct{ Link link.LinkEntity }) error {
+	if err := t.tmpl.ExecuteTemplate(w, "fragments-link.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type EditLinkModalFragmentData struct {
+	User    user.UserEntity
+	Folders []folder.FolderEntity
+	Link    link.LinkEntity
+}
+
+func (t *Templates) EditLinkModalFragment(w io.Writer, data EditLinkModalFragmentData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "fragments-edit-link-modal.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}

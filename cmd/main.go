@@ -50,6 +50,11 @@ func main() {
 	defer db.Close()
 	lg.Println("successfully connected to database")
 
+	t, err := templates.NewTemplates()
+	if err != nil {
+		lg.Println("failed to instantiate templates:", err)
+	}
+
 	ur := user.NewRepository(db)
 	fr := folder.NewRepository(db)
 	lr := link.NewRepository(db)
@@ -59,13 +64,8 @@ func main() {
 	as := auth.NewService(us, os.Getenv("SECRET"))
 	ah := auth.NewHandler(lg, as, us)
 	am := auth.NewMiddleware(lg, as, us)
-	lh := link.NewHandler(lg, ls)
+	lh := link.NewHandler(lg, ls, t)
 	fh := folder.NewHandler(lg, fs)
-
-	t, err := templates.NewTemplates()
-	if err != nil {
-		lg.Println("failed to instantiate templates:", err)
-	}
 
 	ph := page.NewHandler(lg, fs, ls, as, *t)
 	r := common.Route(lg, *ph, *ah, *am, *lh, *fh)

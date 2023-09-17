@@ -1,0 +1,70 @@
+<dialog
+  id="edit_link_modal"
+  class="modal modal-bottom sm:modal-middle modal-open"
+  hx-boost="true"
+>
+  <form
+    class="modal-box"
+    hx-put="/links/{{.Link.ID}}"
+    hx-target="#link_{{.Link.ID}}"
+    hx-swap="outerHTML"
+    hx-on::before-request="edit_link_modal.remove()"
+  >
+    <h3 class="font-bold text-lg mb-4">Edit link</h3>
+    <div class="grid grid-cols-4 mb-2">
+      <label for="url" class="col-span-1">URL</label>
+      <input
+        type="url"
+        name="URL"
+        class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
+        value="{{.Link.URL}}"
+      />
+    </div>
+    <div class="grid grid-cols-4 mb-2">
+      <label for="title" class="col-span-1">Title</label>
+      <input
+        type="text"
+        name="title"
+        class="col-span-3 input input-sm input-bordered"
+        value="{{.Link.Title}}"
+      />
+    </div>
+    <div class="grid grid-cols-4 mb-2">
+      <label for="description" class="col-span-1">Description</label>
+      <input
+        type="text"
+        name="description"
+        class="col-span-3 input input-sm input-bordered"
+        value="{{.Link.Description}}"
+      />
+    </div>
+    <div class="grid grid-cols-4 mb-2">
+      <label for="folderId" class="col-span-1">Folder</label>
+      <select
+        name="folderId"
+        class="col-span-3 select select-sm select-bordered"
+        value="{{.Link.FolderID}}"
+      >
+        <option>Choose folder...</option>
+        {{$root := .}} {{range $i := .Folders}} {{if (eq $i.ID
+        $root.Link.FolderID)}}
+        <option value="{{$i.ID}}" selected>{{$i.UniqueName}}</option>
+        {{else}}
+        <option value="{{$i.ID}}">{{$i.UniqueName}}</option>
+        {{end}} {{end}}
+      </select>
+    </div>
+    <input type="hidden" name="userId" value="{{.User.ID}}" />
+    <div class="modal-action">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        formmethod="dialog"
+        onclick="edit_link_modal.remove()"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="btn">Save</button>
+    </div>
+  </form>
+</dialog>

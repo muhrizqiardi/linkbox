@@ -167,6 +167,51 @@ func (h *Handler) HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request
 	}
 }
 
+func (h *Handler) HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Request) {
+	linkID, err := strconv.Atoi(chi.URLParam(r, "linkID"))
+	if err != nil {
+		h.lg.Println("failed to parse link ID from URL:", err)
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+
+	l, err := h.ls.GetOneByID(linkID)
+	if err != nil {
+		h.lg.Println("failed to get link data")
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	uCtx := r.Context().Value("user")
+	foundUser, ok := uCtx.(user.UserEntity)
+	if !ok {
+		h.lg.Println("failed to get user data passed from middleware")
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	folders, err := h.fs.GetMany(foundUser.ID, folder.GetManyFoldersDTO{
+		Sort:    folder.GetManyFoldersSortDescending,
+		OrderBy: folder.GetManyFoldersOrderByUpdatedAt,
+		Limit:   20,
+		Offset:  0,
+	})
+
+	if err != nil {
+		h.lg.Println("failed to find folders related to user", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	if err := h.t.EditLinkModalFragment(w, templates.EditLinkModalFragmentData{
+		User: foundUser, Folders: folders, Link: l,
+	}); err != nil {
+		h.lg.Println("failed to render HTML fragment:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func (h *Handler) HandleRegisterPage(w http.ResponseWriter, r *http.Request) {
 	existingCookie, err := r.Cookie("token")
 	if err == nil {
