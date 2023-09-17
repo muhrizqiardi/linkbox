@@ -7,18 +7,17 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var ErrInvalidUsername error = errors.New("Username can only contains alphanumeric character and underscore, and can only have at least 3 characters and 21 characters maximum")
 
 type service struct {
-	us     user.Service
+	us     common.UserService
 	secret string
 }
 
-func NewService(us user.Service, secret string) *service {
+func NewService(us common.UserService, secret string) *service {
 	return &service{us, secret}
 }
 

@@ -10,10 +10,10 @@ var ErrInvalidOrderBy = errors.New("\"orderBy\" should either be \"created_at\" 
 var ErrInvalidSortMethod = errors.New("\"sort\" should either be \"asc\" \"desc\"")
 
 type service struct {
-	repo Repository
+	repo common.LinkRepository
 }
 
-func NewService(repo Repository) *service {
+func NewService(repo common.LinkRepository) *service {
 	return &service{repo}
 }
 

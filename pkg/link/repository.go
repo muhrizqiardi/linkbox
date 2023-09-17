@@ -13,41 +13,6 @@ const (
 	SortDESC = "desc"
 )
 
-type Repository interface {
-	CreateLink(
-		url string,
-		title string,
-		description string,
-		user_id int,
-		folder_id int,
-	) (common.LinkEntity, error)
-	GetOneLinkByID(id int) (common.LinkEntity, error)
-	GetManyLinksInsideDefaultFolder(
-		userID int,
-		limit int,
-		offset int,
-		orderBy string,
-		sort string,
-	) ([]common.LinkEntity, error)
-	GetManyLinksInsideFolder(
-		userID int,
-		folder_id int,
-		limit int,
-		offset int,
-		orderBy string,
-		sort string,
-	) ([]common.LinkEntity, error)
-	UpdateOneLinkByID(
-		id int,
-		url string,
-		title string,
-		description string,
-		user_id int,
-		folder_id int,
-	) (common.LinkEntity, error)
-	DeleteOneLinkByID(id int) (common.LinkEntity, error)
-}
-
 type repository struct {
 	db *sqlx.DB
 }

@@ -34,6 +34,41 @@ type FolderService interface {
 	DeleteOneByID(id int) (FolderEntity, error)
 }
 
+type LinkRepository interface {
+	CreateLink(
+		url string,
+		title string,
+		description string,
+		user_id int,
+		folder_id int,
+	) (LinkEntity, error)
+	GetOneLinkByID(id int) (LinkEntity, error)
+	GetManyLinksInsideDefaultFolder(
+		userID int,
+		limit int,
+		offset int,
+		orderBy string,
+		sort string,
+	) ([]LinkEntity, error)
+	GetManyLinksInsideFolder(
+		userID int,
+		folder_id int,
+		limit int,
+		offset int,
+		orderBy string,
+		sort string,
+	) ([]LinkEntity, error)
+	UpdateOneLinkByID(
+		id int,
+		url string,
+		title string,
+		description string,
+		user_id int,
+		folder_id int,
+	) (LinkEntity, error)
+	DeleteOneLinkByID(id int) (LinkEntity, error)
+}
+
 type LinkService interface {
 	Create(payload CreateLinkDTO) (LinkEntity, error)
 	GetOneByID(id int) (LinkEntity, error)
@@ -41,6 +76,14 @@ type LinkService interface {
 	GetManyInsideFolder(userID int, folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
 	UpdateOneByID(id int, payload UpdateLinkDTO) (LinkEntity, error)
 	DeleteOneByID(id int) (LinkEntity, error)
+}
+
+type UserRepository interface {
+	CreateUser(username string, password string) (UserEntity, error)
+	GetOneUserByID(id int) (UserEntity, error)
+	GetOneUserByUsername(username string) (UserEntity, error)
+	UpdateUserByID(id int, username string, password string) (UserEntity, error)
+	DeleteUserByID(id int) (UserEntity, error)
 }
 
 type UserService interface {

@@ -5,14 +5,6 @@ import (
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
 
-type Repository interface {
-	CreateUser(username string, password string) (common.UserEntity, error)
-	GetOneUserByID(id int) (common.UserEntity, error)
-	GetOneUserByUsername(username string) (common.UserEntity, error)
-	UpdateUserByID(id int, username string, password string) (common.UserEntity, error)
-	DeleteUserByID(id int) (common.UserEntity, error)
-}
-
 type repository struct {
 	db *sqlx.DB
 }

@@ -14,20 +14,12 @@ var ErrConfirmPasswordNotMatched error = errors.New("Confirm Password field shou
 type folderService interface {
 }
 
-type Service interface {
-	Create(payload common.CreateUserDTO) (common.UserEntity, error)
-	GetOneByID(id int) (common.UserEntity, error)
-	GetOneByUsername(username string) (common.UserEntity, error)
-	UpdateOneByID(id int, payload common.UpdateUserDTO) (common.UserEntity, error)
-	DeleteOneByID(id int) (common.UserEntity, error)
-}
-
 type service struct {
-	repo Repository
+	repo common.UserRepository
 	fs   common.FolderService
 }
 
-func NewService(repo Repository, fs common.FolderService) *service {
+func NewService(repo common.UserRepository, fs common.FolderService) *service {
 	return &service{repo, fs}
 }
 
