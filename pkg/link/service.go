@@ -2,19 +2,12 @@ package link
 
 import (
 	"errors"
+
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
 
 var ErrInvalidOrderBy = errors.New("\"orderBy\" should either be \"created_at\" or \"update_at\"")
 var ErrInvalidSortMethod = errors.New("\"sort\" should either be \"asc\" \"desc\"")
-
-type Service interface {
-	Create(payload CreateLinkDTO) (LinkEntity, error)
-	GetOneByID(id int) (LinkEntity, error)
-	GetManyInsideDefaultFolder(userID int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
-	GetManyInsideFolder(userID int, folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
-	UpdateOneByID(id int, payload UpdateLinkDTO) (LinkEntity, error)
-	DeleteOneByID(id int) (LinkEntity, error)
-}
 
 type service struct {
 	repo Repository
@@ -24,7 +17,7 @@ func NewService(repo Repository) *service {
 	return &service{repo}
 }
 
-func (s *service) Create(payload CreateLinkDTO) (LinkEntity, error) {
+func (s *service) Create(payload common.CreateLinkDTO) (common.LinkEntity, error) {
 	// TODO: validate payload
 	link, err := s.repo.CreateLink(
 		payload.URL,
@@ -34,22 +27,22 @@ func (s *service) Create(payload CreateLinkDTO) (LinkEntity, error) {
 		payload.FolderID,
 	)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil
 }
 
-func (s *service) GetOneByID(id int) (LinkEntity, error) {
+func (s *service) GetOneByID(id int) (common.LinkEntity, error) {
 	link, err := s.repo.GetOneLinkByID(id)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil
 }
 
-func (s *service) GetManyInsideDefaultFolder(userID int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error) {
+func (s *service) GetManyInsideDefaultFolder(userID int, payload common.GetManyLinksInsideFolderDTO) ([]common.LinkEntity, error) {
 	switch payload.OrderBy {
 	case OrderByCreatedAt:
 		switch payload.Sort {
@@ -57,7 +50,7 @@ func (s *service) GetManyInsideDefaultFolder(userID int, payload GetManyLinksIns
 		case SortDESC:
 			break
 		default:
-			return []LinkEntity{}, ErrInvalidSortMethod
+			return []common.LinkEntity{}, ErrInvalidSortMethod
 		}
 	case OrderByUpdatedAt:
 		switch payload.Sort {
@@ -65,10 +58,10 @@ func (s *service) GetManyInsideDefaultFolder(userID int, payload GetManyLinksIns
 		case SortDESC:
 			break
 		default:
-			return []LinkEntity{}, ErrInvalidSortMethod
+			return []common.LinkEntity{}, ErrInvalidSortMethod
 		}
 	default:
-		return []LinkEntity{}, ErrInvalidOrderBy
+		return []common.LinkEntity{}, ErrInvalidOrderBy
 	}
 
 	links, err := s.repo.GetManyLinksInsideDefaultFolder(
@@ -79,13 +72,13 @@ func (s *service) GetManyInsideDefaultFolder(userID int, payload GetManyLinksIns
 		payload.Sort,
 	)
 	if err != nil {
-		return []LinkEntity{}, err
+		return []common.LinkEntity{}, err
 	}
 
 	return links, nil
 }
 
-func (s *service) GetManyInsideFolder(userID int, folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error) {
+func (s *service) GetManyInsideFolder(userID int, folderId int, payload common.GetManyLinksInsideFolderDTO) ([]common.LinkEntity, error) {
 	switch payload.OrderBy {
 	case OrderByCreatedAt:
 		switch payload.Sort {
@@ -93,7 +86,7 @@ func (s *service) GetManyInsideFolder(userID int, folderId int, payload GetManyL
 		case SortDESC:
 			break
 		default:
-			return []LinkEntity{}, ErrInvalidSortMethod
+			return []common.LinkEntity{}, ErrInvalidSortMethod
 		}
 	case OrderByUpdatedAt:
 		switch payload.Sort {
@@ -101,10 +94,10 @@ func (s *service) GetManyInsideFolder(userID int, folderId int, payload GetManyL
 		case SortDESC:
 			break
 		default:
-			return []LinkEntity{}, ErrInvalidSortMethod
+			return []common.LinkEntity{}, ErrInvalidSortMethod
 		}
 	default:
-		return []LinkEntity{}, ErrInvalidOrderBy
+		return []common.LinkEntity{}, ErrInvalidOrderBy
 	}
 
 	links, err := s.repo.GetManyLinksInsideFolder(
@@ -116,13 +109,13 @@ func (s *service) GetManyInsideFolder(userID int, folderId int, payload GetManyL
 		payload.Sort,
 	)
 	if err != nil {
-		return []LinkEntity{}, err
+		return []common.LinkEntity{}, err
 	}
 
 	return links, nil
 }
 
-func (s *service) UpdateOneByID(id int, payload UpdateLinkDTO) (LinkEntity, error) {
+func (s *service) UpdateOneByID(id int, payload common.UpdateLinkDTO) (common.LinkEntity, error) {
 	// TODO: validate payload
 	link, err := s.repo.UpdateOneLinkByID(
 		id,
@@ -133,17 +126,17 @@ func (s *service) UpdateOneByID(id int, payload UpdateLinkDTO) (LinkEntity, erro
 		payload.FolderID,
 	)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil
 
 }
 
-func (s *service) DeleteOneByID(id int) (LinkEntity, error) {
+func (s *service) DeleteOneByID(id int) (common.LinkEntity, error) {
 	link, err := s.repo.DeleteOneLinkByID(id)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil

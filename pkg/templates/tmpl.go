@@ -5,9 +5,7 @@ import (
 	"html/template"
 	"io"
 
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
 
 //go:embed *.html
@@ -26,18 +24,7 @@ func NewTemplates() (*Templates, error) {
 	return &Templates{tmpl}, nil
 }
 
-type MetaData struct {
-	Title       string
-	Description string
-	ImageURL    string
-}
-
-type RegisterPageData struct {
-	Errors []string
-	MetaData
-}
-
-func (t *Templates) RegisterPage(w io.Writer, data RegisterPageData) error {
+func (t *Templates) RegisterPage(w io.Writer, data common.RegisterPageData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "pages-register.html", data); err != nil {
 		return err
 	}
@@ -45,12 +32,7 @@ func (t *Templates) RegisterPage(w io.Writer, data RegisterPageData) error {
 	return nil
 }
 
-type LogInPageData struct {
-	Errors []string
-	MetaData
-}
-
-func (t *Templates) LogInPage(w io.Writer, data LogInPageData) error {
+func (t *Templates) LogInPage(w io.Writer, data common.LogInPageData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "pages-log-in.html", data); err != nil {
 		return err
 	}
@@ -58,14 +40,7 @@ func (t *Templates) LogInPage(w io.Writer, data LogInPageData) error {
 	return nil
 }
 
-type IndexPageData struct {
-	User    user.UserEntity
-	Folders []folder.FolderEntity
-	Links   []link.LinkEntity
-	MetaData
-}
-
-func (t *Templates) IndexPage(w io.Writer, data IndexPageData) error {
+func (t *Templates) IndexPage(w io.Writer, data common.IndexPageData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "pages-index.html", data); err != nil {
 		return err
 	}
@@ -73,15 +48,7 @@ func (t *Templates) IndexPage(w io.Writer, data IndexPageData) error {
 	return nil
 }
 
-type LinksInFolderPageData struct {
-	User    user.UserEntity
-	Folder  folder.FolderEntity
-	Folders []folder.FolderEntity
-	Links   []link.LinkEntity
-	MetaData
-}
-
-func (t *Templates) LinksInFolderPage(w io.Writer, data LinksInFolderPageData) error {
+func (t *Templates) LinksInFolderPage(w io.Writer, data common.LinksInFolderPageData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "pages-links-in-folder.html", data); err != nil {
 		return err
 	}
@@ -89,11 +56,7 @@ func (t *Templates) LinksInFolderPage(w io.Writer, data LinksInFolderPageData) e
 	return nil
 }
 
-type LinkFragmentData struct {
-	Link link.LinkEntity
-}
-
-func (t *Templates) LinkFragment(w io.Writer, data struct{ Link link.LinkEntity }) error {
+func (t *Templates) LinkFragment(w io.Writer, data common.LinkFragmentData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "fragments-link.html", data); err != nil {
 		return err
 	}
@@ -101,13 +64,7 @@ func (t *Templates) LinkFragment(w io.Writer, data struct{ Link link.LinkEntity 
 	return nil
 }
 
-type EditLinkModalFragmentData struct {
-	User    user.UserEntity
-	Folders []folder.FolderEntity
-	Link    link.LinkEntity
-}
-
-func (t *Templates) EditLinkModalFragment(w io.Writer, data EditLinkModalFragmentData) error {
+func (t *Templates) EditLinkModalFragment(w io.Writer, data common.EditLinkModalFragmentData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "fragments-edit-link-modal.html", data); err != nil {
 		return err
 	}

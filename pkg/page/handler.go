@@ -6,22 +6,25 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/templates"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
 type Handler struct {
 	lg *log.Logger
-	fs folder.Service
-	ls link.Service
-	as auth.Service
-	t  templates.Templates
+	fs common.FolderService
+	ls common.LinkService
+	as common.AuthService
+	t  common.Templater
 }
 
-func NewHandler(lg *log.Logger, fs folder.Service, ls link.Service, as auth.Service, t templates.Templates) *Handler {
+func NewHandler(
+	lg *log.Logger,
+	fs common.FolderService,
+	ls common.LinkService,
+	as common.AuthService,
+	t common.Templater,
+) *Handler {
 	return &Handler{lg, fs, ls, as, t}
 }
 
@@ -44,13 +47,13 @@ func (h *Handler) HandleIndexPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	uCtx := r.Context().Value("user")
-	foundUser, ok := uCtx.(user.UserEntity)
+	foundUser, ok := uCtx.(common.UserEntity)
 	if !ok {
 		h.lg.Println("failed to get user data passed from middleware")
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
-	folders, err := h.fs.GetMany(foundUser.ID, folder.GetManyFoldersDTO{
+	folders, err := h.fs.GetMany(foundUser.ID, common.GetManyFoldersDTO{
 		Sort:    folder.GetManyFoldersSortDescending,
 		OrderBy: folder.GetManyFoldersOrderByUpdatedAt,
 		Limit:   20,
@@ -62,7 +65,7 @@ func (h *Handler) HandleIndexPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	links, err := h.ls.GetManyInsideDefaultFolder(foundUser.ID, link.GetManyLinksInsideFolderDTO{
+	links, err := h.ls.GetManyInsideDefaultFolder(foundUser.ID, common.GetManyLinksInsideFolderDTO{
 		Limit:   itemPerPage,
 		Offset:  (page - 1) * itemPerPage,
 		OrderBy: orderBy,
@@ -74,11 +77,11 @@ func (h *Handler) HandleIndexPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.t.IndexPage(w, templates.IndexPageData{
+	if err := h.t.IndexPage(w, common.IndexPageData{
 		User:    foundUser,
 		Folders: folders,
 		Links:   links,
-		MetaData: templates.MetaData{
+		MetaData: common.MetaData{
 			Title:       "Home - Linkbox",
 			Description: "Home of the Linkbox app",
 			ImageURL:    "",
@@ -114,13 +117,13 @@ func (h *Handler) HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request
 	}
 
 	uCtx := r.Context().Value("user")
-	foundUser, ok := uCtx.(user.UserEntity)
+	foundUser, ok := uCtx.(common.UserEntity)
 	if !ok {
 		h.lg.Println("failed to get user data passed from middleware")
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
-	folders, err := h.fs.GetMany(foundUser.ID, folder.GetManyFoldersDTO{
+	folders, err := h.fs.GetMany(foundUser.ID, common.GetManyFoldersDTO{
 		Sort:    folder.GetManyFoldersSortDescending,
 		OrderBy: folder.GetManyFoldersOrderByUpdatedAt,
 		Limit:   20,
@@ -138,7 +141,7 @@ func (h *Handler) HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request
 		http.Error(w, "", http.StatusNotFound)
 		return
 	}
-	links, err := h.ls.GetManyInsideFolder(foundUser.ID, folder.ID, link.GetManyLinksInsideFolderDTO{
+	links, err := h.ls.GetManyInsideFolder(foundUser.ID, folder.ID, common.GetManyLinksInsideFolderDTO{
 		Limit:   itemPerPage,
 		Offset:  (page - 1) * itemPerPage,
 		OrderBy: orderBy,
@@ -150,12 +153,12 @@ func (h *Handler) HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if err := h.t.LinksInFolderPage(w, templates.LinksInFolderPageData{
+	if err := h.t.LinksInFolderPage(w, common.LinksInFolderPageData{
 		User:    foundUser,
 		Folder:  folder,
 		Folders: folders,
 		Links:   links,
-		MetaData: templates.MetaData{
+		MetaData: common.MetaData{
 			Title:       "Folders: " + folder.UniqueName + " - Linkbox",
 			Description: "Home of the Linkbox app",
 			ImageURL:    "",
@@ -183,14 +186,14 @@ func (h *Handler) HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Req
 	}
 
 	uCtx := r.Context().Value("user")
-	foundUser, ok := uCtx.(user.UserEntity)
+	foundUser, ok := uCtx.(common.UserEntity)
 	if !ok {
 		h.lg.Println("failed to get user data passed from middleware")
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
 
-	folders, err := h.fs.GetMany(foundUser.ID, folder.GetManyFoldersDTO{
+	folders, err := h.fs.GetMany(foundUser.ID, common.GetManyFoldersDTO{
 		Sort:    folder.GetManyFoldersSortDescending,
 		OrderBy: folder.GetManyFoldersOrderByUpdatedAt,
 		Limit:   20,
@@ -203,7 +206,7 @@ func (h *Handler) HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	if err := h.t.EditLinkModalFragment(w, templates.EditLinkModalFragmentData{
+	if err := h.t.EditLinkModalFragment(w, common.EditLinkModalFragmentData{
 		User: foundUser, Folders: folders, Link: l,
 	}); err != nil {
 		h.lg.Println("failed to render HTML fragment:", err)
@@ -228,8 +231,8 @@ func (h *Handler) HandleRegisterPage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.t.RegisterPage(w, templates.RegisterPageData{
-		MetaData: templates.MetaData{
+	if err := h.t.RegisterPage(w, common.RegisterPageData{
+		MetaData: common.MetaData{
 			Title:       "Register Account - Linkbox",
 			Description: "Register a new account on Linkbox",
 			ImageURL:    "",
@@ -257,8 +260,8 @@ func (h *Handler) HandleLogInPage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.t.LogInPage(w, templates.LogInPageData{
-		MetaData: templates.MetaData{
+	if err := h.t.LogInPage(w, common.LogInPageData{
+		MetaData: common.MetaData{
 			Title:       "Register Account - Linkbox",
 			Description: "Register a new account on Linkbox",
 			ImageURL:    "",

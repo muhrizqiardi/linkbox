@@ -2,6 +2,7 @@ package folder
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
 
 const (
@@ -11,15 +12,6 @@ const (
 	GetManyFoldersSortDescending   = "desc"
 )
 
-type Repository interface {
-	CreateFolder(uniqueName string, userID int) (FolderEntity, error)
-	GetOneFolderByID(id int) (FolderEntity, error)
-	GetOneFolderByUniqueName(uniqueName string, userID int) (FolderEntity, error)
-	GetManyFolders(limit int, offset int, sort string, orderBy string, userID int) ([]FolderEntity, error)
-	UpdateFolderByID(id int, uniqueName string) (FolderEntity, error)
-	DeleteFolderByID(id int) (FolderEntity, error)
-}
-
 type repository struct {
 	db *sqlx.DB
 }
@@ -28,49 +20,49 @@ func NewRepository(db *sqlx.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) CreateFolder(uniqueName string, userID int) (FolderEntity, error) {
+func (r *repository) CreateFolder(uniqueName string, userID int) (common.FolderEntity, error) {
 	stmt, err := r.db.Preparex(QueryCreateFolder)
 	if err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
-	var folder FolderEntity
+	var folder common.FolderEntity
 	if err := stmt.Get(&folder, uniqueName, userID); err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
 	return folder, nil
 }
 
-func (r *repository) GetOneFolderByID(id int) (FolderEntity, error) {
+func (r *repository) GetOneFolderByID(id int) (common.FolderEntity, error) {
 	stmt, err := r.db.Preparex(QueryGetOneFolderByID)
 	if err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
-	var folder FolderEntity
+	var folder common.FolderEntity
 	if err := stmt.Get(&folder, id); err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
 	return folder, nil
 }
 
-func (r *repository) GetOneFolderByUniqueName(uniqueName string, userID int) (FolderEntity, error) {
+func (r *repository) GetOneFolderByUniqueName(uniqueName string, userID int) (common.FolderEntity, error) {
 	stmt, err := r.db.Preparex(QueryGetOneFolderByUniqueName)
 	if err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
-	var folder FolderEntity
+	var folder common.FolderEntity
 	if err := stmt.Get(&folder, uniqueName, userID); err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
 	return folder, nil
 }
 
-func (r *repository) GetManyFolders(limit int, offset int, sort string, orderBy string, userID int) ([]FolderEntity, error) {
+func (r *repository) GetManyFolders(limit int, offset int, sort string, orderBy string, userID int) ([]common.FolderEntity, error) {
 	var q string
 	switch orderBy {
 	case GetManyFoldersOrderByCreatedAt:
@@ -105,40 +97,40 @@ func (r *repository) GetManyFolders(limit int, offset int, sort string, orderBy 
 
 	stmt, err := r.db.Preparex(q)
 	if err != nil {
-		return []FolderEntity{}, err
+		return []common.FolderEntity{}, err
 	}
 
-	var folders []FolderEntity
+	var folders []common.FolderEntity
 	if err := stmt.Select(&folders, limit, offset, userID); err != nil {
-		return []FolderEntity{}, err
+		return []common.FolderEntity{}, err
 	}
 
 	return folders, nil
 }
 
-func (r *repository) UpdateFolderByID(id int, uniqueName string) (FolderEntity, error) {
+func (r *repository) UpdateFolderByID(id int, uniqueName string) (common.FolderEntity, error) {
 	stmt, err := r.db.Preparex(QueryUpdateOneFolderByID)
 	if err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
-	var folder FolderEntity
+	var folder common.FolderEntity
 	if err := stmt.Get(&folder, id, uniqueName); err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
 	return folder, nil
 }
 
-func (r *repository) DeleteFolderByID(id int) (FolderEntity, error) {
+func (r *repository) DeleteFolderByID(id int) (common.FolderEntity, error) {
 	stmt, err := r.db.Preparex(QueryDeleteOneFolderByID)
 	if err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
-	var folder FolderEntity
+	var folder common.FolderEntity
 	if err := stmt.Get(&folder, id); err != nil {
-		return FolderEntity{}, err
+		return common.FolderEntity{}, err
 	}
 
 	return folder, nil

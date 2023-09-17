@@ -2,37 +2,33 @@ package link
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/gorilla/schema"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
 
-type templater interface {
-	LinkFragment(w io.Writer, data struct{ Link LinkEntity }) error
-}
-
-type Handler struct {
+type handler struct {
 	lg *log.Logger
-	ls Service
-	t  templater
+	ls common.LinkService
+	t  common.Templater
 }
 
-func NewHandler(lg *log.Logger, ls Service, t templater) *Handler {
-	return &Handler{lg, ls, t}
+func NewHandler(lg *log.Logger, ls common.LinkService, t common.Templater) *handler {
+	return &handler{lg, ls, t}
 }
 
-func (h *Handler) HandleCreateLink(w http.ResponseWriter, r *http.Request) {
+func (h *handler) HandleCreateLink(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err := r.ParseForm(); err != nil {
 		h.lg.Println("failed to parse form body:", err)
 		http.Error(w, "Failed to parse form body", http.StatusBadRequest)
 	}
 
-	var payload CreateLinkDTO
+	var payload common.CreateLinkDTO
 	if err := schema.NewDecoder().Decode(&payload, r.PostForm); err != nil {
 		h.lg.Println("failed to parse form body:", err)
 		http.Error(w, "", http.StatusInternalServerError)
@@ -47,7 +43,7 @@ func (h *Handler) HandleCreateLink(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (h *Handler) HandleUpdateLink(w http.ResponseWriter, r *http.Request) {
+func (h *handler) HandleUpdateLink(w http.ResponseWriter, r *http.Request) {
 	linkID, err := strconv.Atoi(chi.URLParam(r, "linkID"))
 	if err != nil {
 		h.lg.Println("failed to parse link ID from URL:", err)
@@ -61,7 +57,7 @@ func (h *Handler) HandleUpdateLink(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to parse form body", http.StatusBadRequest)
 	}
 
-	var payload UpdateLinkDTO
+	var payload common.UpdateLinkDTO
 	if err := schema.NewDecoder().Decode(&payload, r.PostForm); err != nil {
 		h.lg.Println("failed to parse form body:", err)
 		http.Error(w, "", http.StatusInternalServerError)
@@ -73,7 +69,7 @@ func (h *Handler) HandleUpdateLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// http.Redirect(w, r, fmt.Sprintf("/links/%d/card", l.ID), http.StatusSeeOther)
-	if err := h.t.LinkFragment(w, struct{ Link LinkEntity }{l}); err != nil {
+	if err := h.t.LinkFragment(w, common.LinkFragmentData{l}); err != nil {
 		h.lg.Println("failed to execute fragment template:", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return

@@ -2,6 +2,7 @@ package link
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
 
 const (
@@ -19,15 +20,15 @@ type Repository interface {
 		description string,
 		user_id int,
 		folder_id int,
-	) (LinkEntity, error)
-	GetOneLinkByID(id int) (LinkEntity, error)
+	) (common.LinkEntity, error)
+	GetOneLinkByID(id int) (common.LinkEntity, error)
 	GetManyLinksInsideDefaultFolder(
 		userID int,
 		limit int,
 		offset int,
 		orderBy string,
 		sort string,
-	) ([]LinkEntity, error)
+	) ([]common.LinkEntity, error)
 	GetManyLinksInsideFolder(
 		userID int,
 		folder_id int,
@@ -35,7 +36,7 @@ type Repository interface {
 		offset int,
 		orderBy string,
 		sort string,
-	) ([]LinkEntity, error)
+	) ([]common.LinkEntity, error)
 	UpdateOneLinkByID(
 		id int,
 		url string,
@@ -43,8 +44,8 @@ type Repository interface {
 		description string,
 		user_id int,
 		folder_id int,
-	) (LinkEntity, error)
-	DeleteOneLinkByID(id int) (LinkEntity, error)
+	) (common.LinkEntity, error)
+	DeleteOneLinkByID(id int) (common.LinkEntity, error)
 }
 
 type repository struct {
@@ -61,29 +62,29 @@ func (r *repository) CreateLink(
 	description string,
 	user_id int,
 	folder_id int,
-) (LinkEntity, error) {
+) (common.LinkEntity, error) {
 	stmt, err := r.db.Preparex(QueryCreateLink)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
-	var link LinkEntity
+	var link common.LinkEntity
 	if err := stmt.Get(&link, url, title, description, user_id, folder_id); err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil
 }
 
-func (r *repository) GetOneLinkByID(id int) (LinkEntity, error) {
+func (r *repository) GetOneLinkByID(id int) (common.LinkEntity, error) {
 	stmt, err := r.db.Preparex(QueryGetOneLinkByID)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
-	var link LinkEntity
+	var link common.LinkEntity
 	if err := stmt.Get(&link, id); err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil
@@ -95,7 +96,7 @@ func (r *repository) GetManyLinksInsideDefaultFolder(
 	offset int,
 	orderBy string,
 	sort string,
-) ([]LinkEntity, error) {
+) ([]common.LinkEntity, error) {
 	var q string = QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortDESC
 	switch orderBy {
 	case OrderByCreatedAt:
@@ -122,12 +123,12 @@ func (r *repository) GetManyLinksInsideDefaultFolder(
 
 	stmt, err := r.db.Preparex(q)
 	if err != nil {
-		return []LinkEntity{}, err
+		return []common.LinkEntity{}, err
 	}
 
-	var link []LinkEntity
+	var link []common.LinkEntity
 	if err := stmt.Select(&link, userID, limit, offset); err != nil {
-		return []LinkEntity{}, err
+		return []common.LinkEntity{}, err
 	}
 
 	return link, nil
@@ -140,7 +141,7 @@ func (r *repository) GetManyLinksInsideFolder(
 	offset int,
 	orderBy string,
 	sort string,
-) ([]LinkEntity, error) {
+) ([]common.LinkEntity, error) {
 	var q string
 	switch orderBy {
 	case OrderByCreatedAt:
@@ -167,12 +168,12 @@ func (r *repository) GetManyLinksInsideFolder(
 
 	stmt, err := r.db.Preparex(q)
 	if err != nil {
-		return []LinkEntity{}, err
+		return []common.LinkEntity{}, err
 	}
 
-	var link []LinkEntity
+	var link []common.LinkEntity
 	if err := stmt.Select(&link, userID, folderId, limit, offset); err != nil {
-		return []LinkEntity{}, err
+		return []common.LinkEntity{}, err
 	}
 
 	return link, nil
@@ -185,29 +186,29 @@ func (r *repository) UpdateOneLinkByID(
 	description string,
 	user_id int,
 	folder_id int,
-) (LinkEntity, error) {
+) (common.LinkEntity, error) {
 	stmt, err := r.db.Preparex(QueryUpdateOneLinkByID)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
-	var link LinkEntity
+	var link common.LinkEntity
 	if err := stmt.Get(&link, id, url, title, description, user_id, folder_id); err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil
 }
 
-func (r *repository) DeleteOneLinkByID(id int) (LinkEntity, error) {
+func (r *repository) DeleteOneLinkByID(id int) (common.LinkEntity, error) {
 	stmt, err := r.db.Preparex(QueryDeleteOneLinkByID)
 	if err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
-	var link LinkEntity
+	var link common.LinkEntity
 	if err := stmt.Get(&link, id); err != nil {
-		return LinkEntity{}, err
+		return common.LinkEntity{}, err
 	}
 
 	return link, nil

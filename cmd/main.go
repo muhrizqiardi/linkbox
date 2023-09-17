@@ -11,10 +11,10 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/page"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/route"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/templates"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
@@ -67,8 +67,8 @@ func main() {
 	lh := link.NewHandler(lg, ls, t)
 	fh := folder.NewHandler(lg, fs)
 
-	ph := page.NewHandler(lg, fs, ls, as, *t)
-	r := common.Route(lg, *ph, *ah, *am, *lh, *fh)
+	ph := page.NewHandler(lg, fs, ls, as, t)
+	r := route.Route(lg, ph, ah, am, lh, fh)
 
 	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
 	lg.Fatalln(http.ListenAndServe(addr, r))

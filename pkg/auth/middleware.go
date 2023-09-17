@@ -5,16 +5,16 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
 
 type Middleware struct {
 	lg *log.Logger
-	as Service
-	us user.Service
+	as common.AuthService
+	us common.UserService
 }
 
-func NewMiddleware(lg *log.Logger, as Service, us user.Service) *Middleware {
+func NewMiddleware(lg *log.Logger, as common.AuthService, us common.UserService) *Middleware {
 	return &Middleware{lg, as, us}
 }
 
