@@ -17,6 +17,32 @@
                 <a href="{{$link.URL}}" class="text-xs"> {{$link.URL}} </a>
               </p>
               <p>{{$link.Description}}</p>
+              <div class="card-actions mt-3 items-center">
+                <ul class="menu menu-horizontal p-0">
+                  <li class="text-error">
+                    <button hx-delete="/links/{{$link.ID}}">
+                      <span class="sr-only">Delete</span>
+                      <span
+                        class="material-symbols-outlined text-error"
+                        style="font-size: 18px"
+                      >
+                        delete
+                      </span>
+                    </button>
+                  </li>
+                  <li>
+                    <button>
+                      <span class="sr-only">Edit</span>
+                      <span
+                        class="material-symbols-outlined"
+                        style="font-size: 18px"
+                      >
+                        edit
+                      </span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </article>
           {{else}}
