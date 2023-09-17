@@ -1,26 +1,41 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Page Title</title>
-  </head>
+  {{template "head" .}}
   <body>
-    <h1>Create Account</h1>
-    <form action="/register" method="post">
-      <div>
-        <label for="username">Username</label>
-        <input type="text" name="username" />
-      </div>
-      <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" />
-      </div>
-      <div>
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" name="confirmPassword" />
-      </div>
-      <button>Create Account</button>
-    </form>
+    <main class="mt-16 mx-auto max-w-2xl p-4" hx-boost="true">
+      <h1 class="font-bold text-lg mb-4">Register a new account</h1>
+      <form action="/register" method="post">
+        <div class="grid grid-cols-4 mb-2">
+          <label for="username" class="col-span-1">Username</label>
+          <input
+            type="text"
+            name="username"
+            class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
+          />
+        </div>
+        <div class="grid grid-cols-4 mb-2">
+          <label for="password" class="col-span-1">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
+          />
+        </div>
+        <div class="grid grid-cols-4 mb-2">
+          <label for="confirmPassword" class="col-span-1">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            name="confirmPassword"
+            class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
+          />
+        </div>
+        <button class="btn mb-4">Create account</button>
+        <p>
+          Or <a href="/log-in" class="link">log in to your existing account</a>.
+        </p>
+      </form>
+    </main>
   </body>
 </html>

@@ -1,22 +1,29 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Log in to account</title>
-  </head>
+  {{template "head" .}}
   <body>
-    <h1>Log In to Account</h1>
-    <form action="/log-in" method="post">
-      <div>
-        <label for="username">Username</label>
-        <input type="text" name="username" />
-      </div>
-      <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" />
-      </div>
-      <button>Log In</button>
-    </form>
+    <main class="mt-16 mx-auto max-w-2xl p-4" hx-boost="true">
+      <h1 class="font-bold text-lg mb-4">Log in to account</h1>
+      <form action="/log-in" method="post">
+        <div class="grid grid-cols-4 mb-2">
+          <label for="username" class="col-span-1">Username</label>
+          <input
+            type="text"
+            name="username"
+            class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
+          />
+        </div>
+        <div class="grid grid-cols-4 mb-2">
+          <label for="password" class="col-span-1">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
+          />
+        </div>
+        <button class="btn mb-4">Log in</button>
+        <p>Or <a href="/register" class="link">register a new account</a>.</p>
+      </form>
+    </main>
   </body>
 </html>
