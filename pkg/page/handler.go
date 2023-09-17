@@ -18,10 +18,11 @@ type Handler struct {
 	fs folder.Service
 	ls link.Service
 	as auth.Service
+	t  templates.Templates
 }
 
-func NewHandler(lg *log.Logger, fs folder.Service, ls link.Service, as auth.Service) *Handler {
-	return &Handler{lg, fs, ls, as}
+func NewHandler(lg *log.Logger, fs folder.Service, ls link.Service, as auth.Service, t templates.Templates) *Handler {
+	return &Handler{lg, fs, ls, as, t}
 }
 
 func (h *Handler) HandleIndexPage(w http.ResponseWriter, r *http.Request) {
@@ -73,10 +74,15 @@ func (h *Handler) HandleIndexPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := templates.IndexPage(w, templates.IndexPageData{
+	if err := h.t.IndexPage(w, templates.IndexPageData{
 		User:    foundUser,
 		Folders: folders,
 		Links:   links,
+		MetaData: templates.MetaData{
+			Title:       "Home - Linkbox",
+			Description: "Home of the Linkbox app",
+			ImageURL:    "",
+		},
 	}); err != nil {
 		h.lg.Println("failed to render page:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -144,11 +150,16 @@ func (h *Handler) HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if err := templates.LinksInFolderPage(w, templates.LinksInFolderPageData{
+	if err := h.t.LinksInFolderPage(w, templates.LinksInFolderPageData{
 		User:    foundUser,
 		Folder:  folder,
 		Folders: folders,
 		Links:   links,
+		MetaData: templates.MetaData{
+			Title:       "Folders: " + folder.UniqueName + " - Linkbox",
+			Description: "Home of the Linkbox app",
+			ImageURL:    "",
+		},
 	}); err != nil {
 		h.lg.Println("failed to render page:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -172,7 +183,13 @@ func (h *Handler) HandleRegisterPage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := templates.RegisterPage(w, templates.RegisterPageData{}); err != nil {
+	if err := h.t.RegisterPage(w, templates.RegisterPageData{
+		MetaData: templates.MetaData{
+			Title:       "Register Account - Linkbox",
+			Description: "Register a new account on Linkbox",
+			ImageURL:    "",
+		},
+	}); err != nil {
 		h.lg.Println("failed to render page:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -195,7 +212,13 @@ func (h *Handler) HandleLogInPage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := templates.LogInPage(w, templates.LogInPageData{}); err != nil {
+	if err := h.t.LogInPage(w, templates.LogInPageData{
+		MetaData: templates.MetaData{
+			Title:       "Register Account - Linkbox",
+			Description: "Register a new account on Linkbox",
+			ImageURL:    "",
+		},
+	}); err != nil {
 		h.lg.Println("failed to render page:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

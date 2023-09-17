@@ -13,17 +13,32 @@ import (
 //go:embed *.html
 var tmplFS embed.FS
 
-type RegisterPageData struct {
-	Errors []string
+type Templates struct {
+	tmpl *template.Template
 }
 
-func RegisterPage(w io.Writer, data RegisterPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "pages-register.html")
+func NewTemplates() (*Templates, error) {
+	tmpl, err := template.ParseFS(tmplFS, "*.html")
 	if err != nil {
-		return err
+		return &Templates{}, err
 	}
 
-	if err := tmpl.ExecuteTemplate(w, "pages-register.html", data); err != nil {
+	return &Templates{tmpl}, nil
+}
+
+type MetaData struct {
+	Title       string
+	Description string
+	ImageURL    string
+}
+
+type RegisterPageData struct {
+	Errors []string
+	MetaData
+}
+
+func (t *Templates) RegisterPage(w io.Writer, data RegisterPageData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "pages-register.html", data); err != nil {
 		return err
 	}
 
@@ -32,15 +47,11 @@ func RegisterPage(w io.Writer, data RegisterPageData) error {
 
 type LogInPageData struct {
 	Errors []string
+	MetaData
 }
 
-func LogInPage(w io.Writer, data LogInPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "pages-log-in.html")
-	if err != nil {
-		return err
-	}
-
-	if err := tmpl.ExecuteTemplate(w, "pages-log-in.html", data); err != nil {
+func (t *Templates) LogInPage(w io.Writer, data LogInPageData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "pages-log-in.html", data); err != nil {
 		return err
 	}
 
@@ -51,15 +62,11 @@ type IndexPageData struct {
 	User    user.UserEntity
 	Folders []folder.FolderEntity
 	Links   []link.LinkEntity
+	MetaData
 }
 
-func IndexPage(w io.Writer, data IndexPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "pages-index.html", "partials-head.html", "partials-new-link-modal.html", "partials-sidebar.html", "partials-index-page-navbar.html", "partials-new-folder-modal.html")
-	if err != nil {
-		return err
-	}
-
-	if err := tmpl.ExecuteTemplate(w, "pages-index.html", data); err != nil {
+func (t *Templates) IndexPage(w io.Writer, data IndexPageData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "pages-index.html", data); err != nil {
 		return err
 	}
 
@@ -71,15 +78,11 @@ type LinksInFolderPageData struct {
 	Folder  folder.FolderEntity
 	Folders []folder.FolderEntity
 	Links   []link.LinkEntity
+	MetaData
 }
 
-func LinksInFolderPage(w io.Writer, data LinksInFolderPageData) error {
-	tmpl, err := template.ParseFS(tmplFS, "pages-links-in-folder.html", "partials-head.html", "partials-new-link-modal.html", "partials-sidebar.html", "partials-navbar.html", "partials-new-folder-modal.html")
-	if err != nil {
-		return err
-	}
-
-	if err := tmpl.ExecuteTemplate(w, "pages-links-in-folder.html", data); err != nil {
+func (t *Templates) LinksInFolderPage(w io.Writer, data LinksInFolderPageData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "pages-links-in-folder.html", data); err != nil {
 		return err
 	}
 

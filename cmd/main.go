@@ -15,6 +15,7 @@ import (
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/page"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/templates"
 	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
 )
 
@@ -60,7 +61,13 @@ func main() {
 	am := auth.NewMiddleware(lg, as, us)
 	lh := link.NewHandler(lg, ls)
 	fh := folder.NewHandler(lg, fs)
-	ph := page.NewHandler(lg, fs, ls, as)
+
+	t, err := templates.NewTemplates()
+	if err != nil {
+		lg.Println("failed to instantiate templates:", err)
+	}
+
+	ph := page.NewHandler(lg, fs, ls, as, *t)
 	r := common.Route(lg, *ph, *ah, *am, *lh, *fh)
 
 	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
