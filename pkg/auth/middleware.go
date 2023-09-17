@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
 type Middleware struct {

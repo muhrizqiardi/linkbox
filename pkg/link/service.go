@@ -3,7 +3,7 @@ package link
 import (
 	"errors"
 
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
 var ErrInvalidOrderBy = errors.New("\"orderBy\" should either be \"created_at\" or \"update_at\"")

@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"io"
 
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
 //go:embed *.html

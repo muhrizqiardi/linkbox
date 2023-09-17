@@ -4,7 +4,7 @@ import (
 	"errors"
 	"regexp"
 
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
 var FolderUniqueNameRegex = regexp.MustCompile("^[a-z0-9_]{3,21}$")

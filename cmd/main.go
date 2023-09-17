@@ -10,13 +10,13 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/auth"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/link"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/page"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/route"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/templates"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/user"
+	"github.com/muhrizqiardi/linkbox/pkg/auth"
+	"github.com/muhrizqiardi/linkbox/pkg/folder"
+	"github.com/muhrizqiardi/linkbox/pkg/link"
+	"github.com/muhrizqiardi/linkbox/pkg/page"
+	"github.com/muhrizqiardi/linkbox/pkg/route"
+	"github.com/muhrizqiardi/linkbox/pkg/templates"
+	"github.com/muhrizqiardi/linkbox/pkg/user"
 )
 
 func setupDB() (*sqlx.DB, error) {

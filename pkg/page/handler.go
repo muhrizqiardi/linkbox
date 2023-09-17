@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/folder"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/folder"
 )
 
 type Handler struct {

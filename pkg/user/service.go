@@ -4,7 +4,7 @@ import (
 	"errors"
 	"regexp"
 
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/schema"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
 type handler struct {

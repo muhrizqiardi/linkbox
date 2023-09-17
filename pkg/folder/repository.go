@@ -2,7 +2,7 @@ package folder
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
+	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
 const (
