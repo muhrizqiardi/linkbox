@@ -1,6 +1,9 @@
 package common
 
-import "io"
+import (
+	"io"
+	"net/http"
+)
 
 type Templater interface {
 	RegisterPage(w io.Writer, data RegisterPageData) error
@@ -14,6 +17,16 @@ type Templater interface {
 type AuthService interface {
 	LogIn(payload LogInDTO) (string, error)
 	CheckIsValid(token string) (TokenClaims, string, error)
+}
+
+type AuthHandler interface {
+	HandleAuthLogIn(w http.ResponseWriter, r *http.Request)
+	HandleCreateUserAndLogIn(w http.ResponseWriter, r *http.Request)
+	HandleLogOut(w http.ResponseWriter, r *http.Request)
+}
+
+type AuthMiddleware interface {
+	OnlyAllowRegisteredUser(next http.Handler) http.Handler
 }
 
 type FolderRepository interface {
@@ -32,6 +45,10 @@ type FolderService interface {
 	GetMany(userID int, options GetManyFoldersDTO) ([]FolderEntity, error)
 	UpdateOneByID(id int, payload UpdateFolderDTO) (FolderEntity, error)
 	DeleteOneByID(id int) (FolderEntity, error)
+}
+
+type FolderHandler interface {
+	HandleCreateFolder(w http.ResponseWriter, r *http.Request)
 }
 
 type LinkRepository interface {
@@ -78,6 +95,12 @@ type LinkService interface {
 	DeleteOneByID(id int) (LinkEntity, error)
 }
 
+type LinkHandler interface {
+	HandleCreateLink(w http.ResponseWriter, r *http.Request)
+	HandleUpdateLink(w http.ResponseWriter, r *http.Request)
+	HandleDeleteLink(w http.ResponseWriter, r *http.Request)
+}
+
 type UserRepository interface {
 	CreateUser(username string, password string) (UserEntity, error)
 	GetOneUserByID(id int) (UserEntity, error)
@@ -92,4 +115,12 @@ type UserService interface {
 	GetOneByUsername(username string) (UserEntity, error)
 	UpdateOneByID(id int, payload UpdateUserDTO) (UserEntity, error)
 	DeleteOneByID(id int) (UserEntity, error)
+}
+
+type PageHandler interface {
+	HandleIndexPage(w http.ResponseWriter, r *http.Request)
+	HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request)
+	HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Request)
+	HandleRegisterPage(w http.ResponseWriter, r *http.Request)
+	HandleLogInPage(w http.ResponseWriter, r *http.Request)
 }

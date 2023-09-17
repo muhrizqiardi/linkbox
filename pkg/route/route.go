@@ -5,42 +5,16 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/muhrizqiardi/linkbox/linkbox/pkg/common"
 )
-
-type pageHandler interface {
-	HandleIndexPage(w http.ResponseWriter, r *http.Request)
-	HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request)
-	HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Request)
-	HandleRegisterPage(w http.ResponseWriter, r *http.Request)
-	HandleLogInPage(w http.ResponseWriter, r *http.Request)
-}
-
-type authHandler interface {
-	HandleAuthLogIn(w http.ResponseWriter, r *http.Request)
-	HandleCreateUserAndLogIn(w http.ResponseWriter, r *http.Request)
-	HandleLogOut(w http.ResponseWriter, r *http.Request)
-}
-
-type authMiddleware interface {
-	OnlyAllowRegisteredUser(next http.Handler) http.Handler
-}
-
-type linkHandler interface {
-	HandleCreateLink(w http.ResponseWriter, r *http.Request)
-	HandleUpdateLink(w http.ResponseWriter, r *http.Request)
-}
-
-type folderHandler interface {
-	HandleCreateFolder(w http.ResponseWriter, r *http.Request)
-}
 
 func Route(
 	lg *log.Logger,
-	ph pageHandler,
-	ah authHandler,
-	am authMiddleware,
-	lh linkHandler,
-	fh folderHandler,
+	ph common.PageHandler,
+	ah common.AuthHandler,
+	am common.AuthMiddleware,
+	lh common.LinkHandler,
+	fh common.FolderHandler,
 ) chi.Router {
 	r := chi.NewRouter()
 
@@ -67,6 +41,7 @@ func Route(
 		r.Post("/links", lh.HandleCreateLink)
 		r.Get("/links/{linkID}/edit", ph.HandleEditLinkModalFragment)
 		r.Put("/links/{linkID}", lh.HandleUpdateLink)
+		r.Delete("/links/{linkID}", lh.HandleDeleteLink)
 	})
 
 	return r
