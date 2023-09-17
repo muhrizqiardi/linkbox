@@ -41,6 +41,7 @@ func Route(
 		r.Post("/links", lh.HandleCreateLink)
 		r.Get("/links/{linkID}/edit", ph.HandleEditLinkModalFragment)
 		r.Put("/links/{linkID}", lh.HandleUpdateLink)
+		r.Get("/links/{linkID}/delete", lh.HandleDeleteLinkConfirmationModal)
 		r.Delete("/links/{linkID}", lh.HandleDeleteLink)
 	})
 

@@ -71,3 +71,11 @@ func (t *Templates) EditLinkModalFragment(w io.Writer, data common.EditLinkModal
 
 	return nil
 }
+
+func (t *Templates) DeleteLinkConfirmationModalFragment(w io.Writer, data common.DeleteLinkConfirmationModalFragmentData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "fragments-delete-link-confirmation-modal.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}

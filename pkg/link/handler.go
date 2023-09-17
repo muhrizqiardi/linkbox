@@ -68,11 +68,47 @@ func (h *handler) HandleUpdateLink(w http.ResponseWriter, r *http.Request) {
 		h.lg.Println("failed to create link:", err)
 	}
 
-	// http.Redirect(w, r, fmt.Sprintf("/links/%d/card", l.ID), http.StatusSeeOther)
-	if err := h.t.LinkFragment(w, common.LinkFragmentData{l}); err != nil {
+	if err := h.t.LinkFragment(w, common.LinkFragmentData{Link: l}); err != nil {
 		h.lg.Println("failed to execute fragment template:", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
+	return
+}
+
+func (h *handler) HandleDeleteLinkConfirmationModal(w http.ResponseWriter, r *http.Request) {
+	linkID, err := strconv.Atoi(chi.URLParam(r, "linkID"))
+	if err != nil {
+		h.lg.Println("failed to parse link ID from URL:", err)
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.t.DeleteLinkConfirmationModalFragment(
+		w,
+		common.DeleteLinkConfirmationModalFragmentData{LinkID: linkID},
+	); err != nil {
+		h.lg.Println("failed to execute fragment template:", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+	return
+}
+
+func (h *handler) HandleDeleteLink(w http.ResponseWriter, r *http.Request) {
+	linkID, err := strconv.Atoi(chi.URLParam(r, "linkID"))
+	if err != nil {
+		h.lg.Println("failed to parse link ID from URL:", err)
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+
+	if _, err := h.ls.DeleteOneByID(linkID); err != nil {
+		h.lg.Println("failed to delete link ID:", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(200)
 	return
 }

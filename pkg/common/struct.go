@@ -40,3 +40,7 @@ type EditLinkModalFragmentData struct {
 	Folders []FolderEntity
 	Link    LinkEntity
 }
+
+type DeleteLinkConfirmationModalFragmentData struct {
+	LinkID int
+}

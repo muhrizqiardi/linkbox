@@ -12,6 +12,7 @@ type Templater interface {
 	LinksInFolderPage(w io.Writer, data LinksInFolderPageData) error
 	LinkFragment(w io.Writer, data LinkFragmentData) error
 	EditLinkModalFragment(w io.Writer, data EditLinkModalFragmentData) error
+	DeleteLinkConfirmationModalFragment(w io.Writer, data DeleteLinkConfirmationModalFragmentData) error
 }
 
 type AuthService interface {
@@ -99,6 +100,7 @@ type LinkHandler interface {
 	HandleCreateLink(w http.ResponseWriter, r *http.Request)
 	HandleUpdateLink(w http.ResponseWriter, r *http.Request)
 	HandleDeleteLink(w http.ResponseWriter, r *http.Request)
+	HandleDeleteLinkConfirmationModal(w http.ResponseWriter, r *http.Request)
 }
 
 type UserRepository interface {
