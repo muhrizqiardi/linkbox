@@ -1,0 +1,46 @@
+{{define "linkCards"}}
+<div class="p-4">
+  {{if .Links}} {{range $link := .Links}}
+  <article id="link_{{$link.ID}}" class="card card-compact bg-base-200 mb-4">
+    <div class="card-body">
+      <p class="mb-0.5">{{$link.Title}}</p>
+      <p>
+        <a href="{{$link.URL}}" class="text-xs"> {{$link.URL}} </a>
+      </p>
+      <p>{{$link.Description}}</p>
+      <div class="card-actions mt-3 items-center">
+        <ul class="menu menu-horizontal p-0">
+          <li class="text-error">
+            <button hx-delete="/links/{{$link.ID}}">
+              <span class="sr-only">Delete</span>
+              <span
+                class="material-symbols-outlined text-error"
+                style="font-size: 18px"
+              >
+                delete
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              hx-get="/links/{{$link.ID}}/edit"
+              hx-target="body"
+              hx-swap="beforeend"
+            >
+              <span class="sr-only">Edit</span>
+              <span class="material-symbols-outlined" style="font-size: 18px">
+                edit
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </article>
+  {{else}}
+  <div class="flex flex-cols items-center p-16">
+    <p class="text-center">Empty</p>
+  </div>
+  {{end}} {{end}}
+</div>
+{{end}}
