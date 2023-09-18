@@ -1,0 +1,41 @@
+{{define "searchPageNavbar"}}
+<nav class="navbar sticky top-0 px-4" hx-boost="true">
+  <label for="main-drawer" class="btn btn-ghost btn-square mr-4 md:hidden">
+    <span class="material-symbols-outlined">menu</span>
+  </label>
+
+  <input
+    type="search"
+    name="query"
+    placeholder="Search..."
+    class="input input-bordered w-full max-w-xl join-item"
+    hx-post="/search"
+    hx-trigger="keyup changed delay:500ms, query"
+    hx-target="#search_results"
+    hx-swap="outerHTML"
+    hx-indicator=".search-indicator"
+  />
+
+  <div class="ml-auto">
+    <details class="dropdown dropdown-end">
+      <summary class="btn btn-ghost btn-square">
+        <span class="material-symbols-outlined">sort</span>
+      </summary>
+      <ul class="menu dropdown-content z-[1] bg-base-200 rounded-xl w-80">
+        <li>
+          <a href="?orderBy=created_at&sort=asc">Creation date (ascending)</a>
+        </li>
+        <li>
+          <a href="?orderBy=created_at&sort=asc">Creation date (descending)</a>
+        </li>
+        <li>
+          <a href="?orderBy=updated_at&sort=desc">Modified date (ascending)</a>
+        </li>
+        <li>
+          <a href="?orderBy=updated_at&sort=desc">Modified date (descending)</a>
+        </li>
+      </ul>
+    </details>
+  </div>
+</nav>
+{{end}}

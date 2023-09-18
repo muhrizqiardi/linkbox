@@ -42,6 +42,15 @@ func (s *service) GetOneByID(id int) (common.LinkEntity, error) {
 	return link, nil
 }
 
+func (s *service) SearchFullText(userID int, query string) ([]common.LinkEntity, error) {
+	ll, err := s.repo.SearchFullText(userID, query)
+	if err != nil {
+		return []common.LinkEntity{}, err
+	}
+
+	return ll, nil
+}
+
 func (s *service) GetManyInsideDefaultFolder(userID int, payload common.GetManyLinksInsideFolderDTO) ([]common.LinkEntity, error) {
 	switch payload.OrderBy {
 	case OrderByCreatedAt:

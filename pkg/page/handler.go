@@ -92,6 +92,45 @@ func (h *Handler) HandleIndexPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (h *Handler) HandleSearchPage(w http.ResponseWriter, r *http.Request) {
+	uCtx := r.Context().Value("user")
+	foundUser, ok := uCtx.(common.UserEntity)
+	if !ok {
+		h.lg.Println("failed to get user data passed from middleware")
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+	ff, err := h.fs.GetMany(foundUser.ID, common.GetManyFoldersDTO{
+		Sort:    folder.GetManyFoldersSortDescending,
+		OrderBy: folder.GetManyFoldersOrderByUpdatedAt,
+		Limit:   20,
+		Offset:  0,
+	})
+	if err != nil {
+		h.lg.Println("failed to find folders related to user", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	if err := h.t.SearchPage(w, common.SearchPageData{
+		User:    foundUser,
+		Folders: ff,
+		Links:   []common.LinkEntity{},
+		MetaData: common.MetaData{
+			Title:       "Search - Linkbox",
+			Description: "Search for links",
+			ImageURL:    "",
+		},
+	}); err != nil {
+		h.lg.Println("failed to render page:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	return
+}
+
 func (h *Handler) HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request) {
 	var page int = 1
 	var itemPerPage int = 10

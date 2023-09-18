@@ -43,6 +43,36 @@ func (h *handler) HandleCreateLink(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func (h *handler) HandleSearch(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		h.lg.Println("failed to parse form body:", err)
+		http.Error(w, "Failed to parse form body", http.StatusBadRequest)
+	}
+	query := r.PostForm.Get("query")
+	uCtx := r.Context().Value("user")
+	foundUser, ok := uCtx.(common.UserEntity)
+	if !ok {
+		h.lg.Println("failed to get user data passed from middleware")
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+	ll, err := h.ls.SearchFullText(foundUser.ID, query)
+	if err != nil {
+		h.lg.Println("failed to search full-text for links:", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	if err := h.t.SearchResultsFragment(w, common.SearchResultsFragmentData{
+		Links: ll,
+	}); err != nil {
+		h.lg.Println("failed to execute fragment template:", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+	return
+}
+
 func (h *handler) HandleUpdateLink(w http.ResponseWriter, r *http.Request) {
 	linkID, err := strconv.Atoi(chi.URLParam(r, "linkID"))
 	if err != nil {

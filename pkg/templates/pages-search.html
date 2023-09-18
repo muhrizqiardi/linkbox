@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  {{template "head" .}}
+  <body>
+    <div class="drawer md:drawer-open">
+      <input type="checkbox" id="main-drawer" class="drawer-toggle" />
+      <div class="drawer-content">
+        {{template "searchPageNavbar" .}}
+        <div id="search_results" class="p-4">
+          <p class="text-center mt-4">Start searching...</p>
+        </div>
+      </div>
+      {{template "sidebar" .}}
+    </div>
+    {{template "newLinkModal" .}} {{template "newFolderModal" .}}
+  </body>
+</html>

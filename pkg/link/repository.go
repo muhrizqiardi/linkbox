@@ -1,6 +1,10 @@
 package link
 
 import (
+	"errors"
+	"strconv"
+
+	"github.com/RediSearch/redisearch-go/redisearch"
 	"github.com/jmoiron/sqlx"
 	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
@@ -14,11 +18,12 @@ const (
 )
 
 type repository struct {
-	db *sqlx.DB
+	db  *sqlx.DB
+	rsc *redisearch.Client
 }
 
-func NewRepository(db *sqlx.DB) *repository {
-	return &repository{db}
+func NewRepository(db *sqlx.DB, rsc *redisearch.Client) *repository {
+	return &repository{db, rsc}
 }
 
 func (r *repository) CreateLink(
@@ -39,6 +44,80 @@ func (r *repository) CreateLink(
 	}
 
 	return link, nil
+}
+
+func (r *repository) SearchFullText(userID int, query string) ([]common.LinkEntity, error) {
+	docs, total, err := r.rsc.Search(
+		redisearch.
+			NewQuery(query).
+			SetInFields("title", "description", "url").
+			SetReturnFields(
+				"id",
+				"url",
+				"title",
+				"description",
+				"user_id",
+				"folder_id",
+				"created_at",
+				"updated_at",
+			),
+	)
+	if err != nil {
+		return []common.LinkEntity{}, err
+	}
+
+	ll := make([]common.LinkEntity, 0, total)
+	for _, e := range docs {
+		idStr, ok := e.Properties["id"].(string)
+		if !ok {
+			return []common.LinkEntity{}, errors.New("field id does not exist in search result")
+		}
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			return []common.LinkEntity{}, err
+		}
+		url, ok := e.Properties["url"].(string)
+		if !ok {
+			return []common.LinkEntity{}, errors.New("field url does not exist in search result")
+		}
+		title, ok := e.Properties["title"].(string)
+		if !ok {
+			return []common.LinkEntity{}, errors.New("field title does not exist in search result")
+		}
+		description, ok := e.Properties["description"].(string)
+		if !ok {
+			return []common.LinkEntity{}, errors.New("field description does not exist in search result")
+		}
+		userIDStr, ok := e.Properties["user_id"].(string)
+		if !ok {
+			return []common.LinkEntity{}, errors.New("field user_id does not exist in search result")
+		}
+		resUserID, err := strconv.Atoi(userIDStr)
+		if err != nil {
+			return []common.LinkEntity{}, err
+		}
+		if resUserID != userID {
+			continue
+		}
+		folderIDStr, ok := e.Properties["folder_id"].(string)
+		if !ok {
+			return []common.LinkEntity{}, errors.New("field folder_id does not exist in search result")
+		}
+		folderID, err := strconv.Atoi(folderIDStr)
+		if err != nil {
+			return []common.LinkEntity{}, err
+		}
+		ll = append(ll, common.LinkEntity{
+			ID:          id,
+			URL:         url,
+			Title:       title,
+			Description: description,
+			UserID:      resUserID,
+			FolderID:    folderID,
+		})
+	}
+
+	return ll, nil
 }
 
 func (r *repository) GetOneLinkByID(id int) (common.LinkEntity, error) {

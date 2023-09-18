@@ -23,6 +23,18 @@ type IndexPageData struct {
 	MetaData
 }
 
+type SearchPageData struct {
+	User    UserEntity
+	Folders []FolderEntity
+	Links   []LinkEntity
+	MetaData
+}
+
+type SearchResultsFragmentData struct {
+	Links []LinkEntity
+	MetaData
+}
+
 type LinksInFolderPageData struct {
 	User    UserEntity
 	Folder  FolderEntity

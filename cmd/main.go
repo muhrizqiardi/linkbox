@@ -15,6 +15,7 @@ import (
 	"github.com/muhrizqiardi/linkbox/pkg/link"
 	"github.com/muhrizqiardi/linkbox/pkg/page"
 	"github.com/muhrizqiardi/linkbox/pkg/route"
+	"github.com/muhrizqiardi/linkbox/pkg/search"
 	"github.com/muhrizqiardi/linkbox/pkg/templates"
 	"github.com/muhrizqiardi/linkbox/pkg/user"
 )
@@ -50,6 +51,8 @@ func main() {
 	defer db.Close()
 	lg.Println("successfully connected to database")
 
+	rsc := search.Setup(lg, db)
+
 	t, err := templates.NewTemplates()
 	if err != nil {
 		lg.Println("failed to instantiate templates:", err)
@@ -57,7 +60,7 @@ func main() {
 
 	ur := user.NewRepository(db)
 	fr := folder.NewRepository(db)
-	lr := link.NewRepository(db)
+	lr := link.NewRepository(db, rsc)
 	ls := link.NewService(lr)
 	fs := folder.NewService(fr)
 	us := user.NewService(ur, fs)

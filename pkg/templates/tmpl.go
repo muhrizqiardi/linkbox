@@ -48,6 +48,22 @@ func (t *Templates) IndexPage(w io.Writer, data common.IndexPageData) error {
 	return nil
 }
 
+func (t *Templates) SearchPage(w io.Writer, data common.SearchPageData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "pages-search.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (t *Templates) SearchResultsFragment(w io.Writer, data common.SearchResultsFragmentData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "fragments-search-results.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (t *Templates) LinksInFolderPage(w io.Writer, data common.LinksInFolderPageData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "pages-links-in-folder.html", data); err != nil {
 		return err

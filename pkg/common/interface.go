@@ -8,6 +8,8 @@ import (
 type Templater interface {
 	RegisterPage(w io.Writer, data RegisterPageData) error
 	LogInPage(w io.Writer, data LogInPageData) error
+	SearchPage(w io.Writer, data SearchPageData) error
+	SearchResultsFragment(w io.Writer, data SearchResultsFragmentData) error
 	IndexPage(w io.Writer, data IndexPageData) error
 	LinksInFolderPage(w io.Writer, data LinksInFolderPageData) error
 	LinkFragment(w io.Writer, data LinkFragmentData) error
@@ -61,6 +63,7 @@ type LinkRepository interface {
 		folder_id int,
 	) (LinkEntity, error)
 	GetOneLinkByID(id int) (LinkEntity, error)
+	SearchFullText(userID int, query string) ([]LinkEntity, error)
 	GetManyLinksInsideDefaultFolder(
 		userID int,
 		limit int,
@@ -90,6 +93,7 @@ type LinkRepository interface {
 type LinkService interface {
 	Create(payload CreateLinkDTO) (LinkEntity, error)
 	GetOneByID(id int) (LinkEntity, error)
+	SearchFullText(userID int, query string) ([]LinkEntity, error)
 	GetManyInsideDefaultFolder(userID int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
 	GetManyInsideFolder(userID int, folderId int, payload GetManyLinksInsideFolderDTO) ([]LinkEntity, error)
 	UpdateOneByID(id int, payload UpdateLinkDTO) (LinkEntity, error)
@@ -98,6 +102,7 @@ type LinkService interface {
 
 type LinkHandler interface {
 	HandleCreateLink(w http.ResponseWriter, r *http.Request)
+	HandleSearch(w http.ResponseWriter, r *http.Request)
 	HandleUpdateLink(w http.ResponseWriter, r *http.Request)
 	HandleDeleteLink(w http.ResponseWriter, r *http.Request)
 	HandleDeleteLinkConfirmationModal(w http.ResponseWriter, r *http.Request)
@@ -121,6 +126,7 @@ type UserService interface {
 
 type PageHandler interface {
 	HandleIndexPage(w http.ResponseWriter, r *http.Request)
+	HandleSearchPage(w http.ResponseWriter, r *http.Request)
 	HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request)
 	HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Request)
 	HandleRegisterPage(w http.ResponseWriter, r *http.Request)

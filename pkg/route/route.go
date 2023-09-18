@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
@@ -17,6 +18,10 @@ func Route(
 	fh common.FolderHandler,
 ) chi.Router {
 	r := chi.NewRouter()
+
+	r.Use(
+		middleware.Logger,
+	)
 
 	r.Handle("/dist/*", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist"))))
 	r.Handle("/node_modules/*", http.StripPrefix("/node_modules/", http.FileServer(http.Dir("./node_modules"))))
@@ -43,6 +48,8 @@ func Route(
 		r.Put("/links/{linkID}", lh.HandleUpdateLink)
 		r.Get("/links/{linkID}/delete", lh.HandleDeleteLinkConfirmationModal)
 		r.Delete("/links/{linkID}", lh.HandleDeleteLink)
+		r.Get("/search", ph.HandleSearchPage)
+		r.Post("/search", lh.HandleSearch)
 	})
 
 	return r
