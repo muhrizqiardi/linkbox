@@ -2,6 +2,9 @@
 <div class="drawer-side">
   <label for="main-drawer" class="drawer-overlay"></label>
   <div class="w-80 min-h-full bg-base-200 text-base-content">
+    <div class="px-6 pt-8 pb-3">
+      <p class="text-lg">Welcome, {{.User.Username}}</p>
+    </div>
     <ul class="menu" hx-boost="true">
       <li><a href="/">Home</a></li>
       <li><a href="/search">Search</a></li>
