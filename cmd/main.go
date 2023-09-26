@@ -42,21 +42,17 @@ func main() {
 
 	envMap, err := godotenv.Read(".env")
 	if err != nil {
-		defer lg.Println("tips: make sure .env has been created")
 		lg.Fatalln("failed to retrieve environment variable:", err)
 	}
 	cfg, err := config.NewFromMap(envMap)
 	if err != nil {
-		defer lg.Println("tips: make sure .env file is in the correct format, check .env.example file")
 		lg.Fatalln("failed to assign environment variables:", err)
 	}
 
 	db, err := setupDB(cfg)
 	if err != nil {
-		defer lg.Println("tips: make sure the database has been started")
 		lg.Fatalln("failed to connect to database:", err)
 	}
-	defer lg.Println("database connection closed")
 	defer db.Close()
 	lg.Println("successfully connected to database")
 
