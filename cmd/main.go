@@ -21,23 +21,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func setupDB(cfg *config.Config) (*sqlx.DB, error) {
-	connstring := fmt.Sprintf(
-		"user='%s' password='%s' dbname='%s' host='%s' sslmode='disable'",
-		cfg.PostgresUser,
-		cfg.PostgresPassword,
-		cfg.PostgresDB,
-		cfg.DBHost,
-	)
-
-	db, err := sqlx.Connect("postgres", connstring)
-	if err != nil {
-		return &sqlx.DB{}, err
-	}
-
-	return db, nil
-}
-
 func main() {
 	lg := log.New(os.Stdout, "linkbox | ", log.LstdFlags)
 
