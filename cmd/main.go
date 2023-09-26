@@ -7,17 +7,16 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/muhrizqiardi/linkbox/internal/presenter/html/handler"
+	"github.com/muhrizqiardi/linkbox/internal/presenter/html/middleware"
+	"github.com/muhrizqiardi/linkbox/internal/presenter/html/route"
+	"github.com/muhrizqiardi/linkbox/internal/presenter/html/template"
+	"github.com/muhrizqiardi/linkbox/internal/repository"
+	"github.com/muhrizqiardi/linkbox/internal/service"
+	"github.com/muhrizqiardi/linkbox/internal/util/setup"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
-	"github.com/muhrizqiardi/linkbox/pkg/auth"
-	"github.com/muhrizqiardi/linkbox/pkg/folder"
-	"github.com/muhrizqiardi/linkbox/pkg/link"
-	"github.com/muhrizqiardi/linkbox/pkg/page"
-	"github.com/muhrizqiardi/linkbox/pkg/route"
-	"github.com/muhrizqiardi/linkbox/pkg/search"
-	"github.com/muhrizqiardi/linkbox/pkg/templates"
-	"github.com/muhrizqiardi/linkbox/pkg/user"
 )
 
 func setupDB() (*sqlx.DB, error) {
@@ -51,26 +50,25 @@ func main() {
 	defer db.Close()
 	lg.Println("successfully connected to database")
 
-	rsc := search.Setup(lg, db)
+	rsc := setup.SetupRedisearch(lg, db)
 
-	t, err := templates.NewTemplates()
+	t, err := template.NewExecutor()
 	if err != nil {
 		lg.Println("failed to instantiate templates:", err)
 	}
 
-	ur := user.NewRepository(db)
-	fr := folder.NewRepository(db)
-	lr := link.NewRepository(db, rsc)
-	ls := link.NewService(lr)
-	fs := folder.NewService(fr)
-	us := user.NewService(ur, fs)
-	as := auth.NewService(us, os.Getenv("SECRET"))
-	ah := auth.NewHandler(lg, as, us)
-	am := auth.NewMiddleware(lg, as, us)
-	lh := link.NewHandler(lg, ls, t)
-	fh := folder.NewHandler(lg, fs)
-
-	ph := page.NewHandler(lg, fs, ls, as, t)
+	lr := repository.NewLinkRepository(db, rsc)
+	fr := repository.NewFolderRepository(db)
+	ur := repository.NewUserRepository(db)
+	ls := service.NewLinkService(lr)
+	fs := service.NewFolderService(fr)
+	us := service.NewUserService(ur, fs)
+	as := service.NewAuthService(us, os.Getenv("SECRET"))
+	am := middleware.NewAuthMiddleware(lg, as, us)
+	ah := handler.NewAuthHandler(lg, as, us)
+	lh := handler.NewLinkHandler(lg, ls, t)
+	fh := handler.NewFolderHandler(lg, fs)
+	ph := handler.NewPageHandler(lg, fs, ls, as, t)
 	r := route.Route(lg, ph, ah, am, lh, fh)
 
 	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
