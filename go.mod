@@ -19,4 +19,5 @@ require github.com/gomodule/redigo v1.8.3 // indirect
 require (
 	github.com/RediSearch/redisearch-go v1.1.1
 	github.com/amacneil/dbmate v1.16.2
+	github.com/google/go-cmp v0.5.9
 )
