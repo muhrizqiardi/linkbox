@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -73,7 +74,7 @@ func (ah *authHandler) HandleCreateUserAndLogIn(w http.ResponseWriter, r *http.R
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	token, err := ah.as.LogIn(request.LogInRequest{Username: user.Username, Password: user.Password})
+	token, err := ah.as.LogIn(request.LogInRequest{Username: user.Username, Password: payload.Password})
 	if err != nil {
 		ah.lg.Println("failed to log in:", err)
 		http.Error(w, "Failed to log in. Account creation was success, so you can try logging in manually.", http.StatusInternalServerError)
