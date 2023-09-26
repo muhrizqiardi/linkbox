@@ -15,10 +15,12 @@ require (
 )
 
 require (
+	github.com/evanw/esbuild v0.19.3 // indirect
 	github.com/gomodule/redigo v1.8.3 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
 )
 
 require (

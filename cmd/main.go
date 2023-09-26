@@ -7,6 +7,7 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	files "github.com/muhrizqiardi/linkbox"
 	"github.com/muhrizqiardi/linkbox/internal/config"
 	"github.com/muhrizqiardi/linkbox/internal/db"
 	"github.com/muhrizqiardi/linkbox/internal/presenter/html/handler"
@@ -67,7 +68,7 @@ func main() {
 	lh := handler.NewLinkHandler(lg, ls, t)
 	fh := handler.NewFolderHandler(lg, fs)
 	ph := handler.NewPageHandler(lg, fs, ls, as, t)
-	r := route.DefineRoute(lg, ph, ah, am, lh, fh)
+	r := route.DefineRoute(lg, ph, ah, am, lh, fh, files.DistFS)
 
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	lg.Fatalln(http.ListenAndServe(addr, r))

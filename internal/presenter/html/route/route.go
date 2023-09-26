@@ -1,6 +1,7 @@
 package route
 
 import (
+	"io/fs"
 	"log"
 	"net/http"
 
@@ -17,6 +18,7 @@ func DefineRoute(
 	am middleware.AuthMiddleware,
 	lh handler.LinkHandler,
 	fh handler.FolderHandler,
+	distFS fs.FS,
 ) chi.Router {
 	r := chi.NewRouter()
 
@@ -24,8 +26,9 @@ func DefineRoute(
 		chiMiddleware.Logger,
 	)
 
-	r.Handle("/dist/*", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist"))))
-	r.Handle("/node_modules/*", http.StripPrefix("/node_modules/", http.FileServer(http.Dir("./node_modules"))))
+	// r.Handle("/dist/*", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist"))))
+	// r.Handle("/node_modules/*", http.StripPrefix("/node_modules/", http.FileServer(http.Dir("./node_modules"))))
+	r.Handle("/dist/*", http.StripPrefix("/", http.FileServer(http.FS(distFS))))
 
 	r.Get("/register", ph.HandleRegisterPage)
 	r.Post("/register", ah.HandleCreateUserAndLogIn)
