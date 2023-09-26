@@ -8,6 +8,7 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/muhrizqiardi/linkbox/internal/config"
+	"github.com/muhrizqiardi/linkbox/internal/db"
 	"github.com/muhrizqiardi/linkbox/internal/presenter/html/handler"
 	"github.com/muhrizqiardi/linkbox/internal/presenter/html/middleware"
 	"github.com/muhrizqiardi/linkbox/internal/presenter/html/route"
@@ -49,23 +50,31 @@ func main() {
 		lg.Fatalln("failed to assign environment variables:", err)
 	}
 
-	db, err := setupDB(cfg)
+	db, err := db.ConnectPostgresWithMigration(
+		lg,
+		cfg.PostgresUser,
+		cfg.PostgresPassword,
+		cfg.PostgresDB,
+		cfg.DBHost,
+		"disable", // TODO: change from disable
+	)
 	if err != nil {
 		lg.Fatalln("failed to connect to database:", err)
 	}
 	defer db.Close()
 	lg.Println("successfully connected to database")
 
-	rsc := setup.SetupRedisearch(lg, db)
+	dbx := sqlx.NewDb(db, "postgres")
+	rsc := setup.SetupRedisearch(lg, dbx, cfg.RedisHost, cfg.RedisPort, cfg.RedisIndexName)
 
 	t, err := template.NewExecutor()
 	if err != nil {
 		lg.Println("failed to instantiate templates:", err)
 	}
 
-	lr := repository.NewLinkRepository(db, rsc)
-	fr := repository.NewFolderRepository(db)
-	ur := repository.NewUserRepository(db)
+	lr := repository.NewLinkRepository(dbx, rsc)
+	fr := repository.NewFolderRepository(dbx)
+	ur := repository.NewUserRepository(dbx)
 	ls := service.NewLinkService(lr)
 	fs := service.NewFolderService(fr)
 	us := service.NewUserService(ur, fs)

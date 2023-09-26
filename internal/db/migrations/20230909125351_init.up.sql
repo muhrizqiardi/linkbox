@@ -1,4 +1,3 @@
--- migrate:up
 create table if not exists users (
     id serial primary key,
     username text unique not null,
@@ -62,10 +61,4 @@ create table if not exists link_tags (
 
     unique (link_id, tag_id, user_id)
 );
-
--- migrate:down
-drop table public.tags;
-drop table public.links;
-drop table public.folders;
-drop table public.users;
 
