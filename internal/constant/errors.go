@@ -3,6 +3,8 @@ package constant
 import "errors"
 
 var (
+	ErrInvalidToken = errors.New("Invalid token")
+
 	ErrInvalidUsername         = errors.New("Username can only contains alphanumeric character and underscore, and can only have at least 3 characters and 21 characters maximum")
 	ErrInvalidFolderUniqueName = errors.New("A folder name can only contains alphanumeric character and underscore, and can only have at least 3 characters and 21 characters maximum")
 
