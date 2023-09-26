@@ -10,8 +10,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func SetupRedisearch(lg *log.Logger, db *sqlx.DB) *redisearch.Client {
-	connstring := fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
+func SetupRedisearch(lg *log.Logger, db *sqlx.DB, redisHost string, redisPort string, redisIndexName string) *redisearch.Client {
+	connstring := fmt.Sprintf("%s:%s", redisHost, redisPort)
 	rsc := redisearch.NewClient(connstring, os.Getenv("REDIS_INDEX_NAME"))
 	sch := redisearch.NewSchema(redisearch.DefaultOptions).
 		AddField(redisearch.NewTextField("title")).
