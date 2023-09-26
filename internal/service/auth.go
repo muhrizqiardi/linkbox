@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/muhrizqiardi/linkbox/internal/constant"
 	"github.com/muhrizqiardi/linkbox/internal/entities"
 	"github.com/muhrizqiardi/linkbox/internal/entities/request"
 
@@ -13,7 +14,7 @@ import (
 
 type AuthService interface {
 	LogIn(payload request.LogInRequest) (string, error)
-	CheckIsValid(token string) (entities.TokenClaims, string, error)
+	CheckIsValid(token string) (entities.TokenClaims, error)
 }
 
 type authService struct {
@@ -54,28 +55,17 @@ func (as *authService) LogIn(payload request.LogInRequest) (string, error) {
 	return ss, nil
 }
 
-func (as *authService) CheckIsValid(token string) (entities.TokenClaims, string, error) {
+func (as *authService) CheckIsValid(token string) (entities.TokenClaims, error) {
 	parsedToken, err := jwt.ParseWithClaims(token, &entities.TokenClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(as.secret), nil
 	})
+	if err != nil {
+		return entities.TokenClaims{}, err
+	}
 	claims, ok := parsedToken.Claims.(*entities.TokenClaims)
 	if !ok || !parsedToken.Valid {
-		return entities.TokenClaims{}, "", nil
+		return entities.TokenClaims{}, constant.ErrInvalidToken
 	}
 
-	newClaims := entities.TokenClaims{
-		UserID: claims.UserID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			NotBefore: jwt.NewNumericDate(time.Now()),
-		},
-	}
-	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, newClaims)
-	ss, err := newToken.SignedString([]byte(as.secret))
-	if err != nil {
-		return entities.TokenClaims{}, "", err
-	}
-
-	return *claims, ss, nil
+	return *claims, nil
 }

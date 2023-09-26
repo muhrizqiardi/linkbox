@@ -271,14 +271,9 @@ func (h *pageHandler) HandleEditLinkModalFragment(w http.ResponseWriter, r *http
 func (h *pageHandler) HandleRegisterPage(w http.ResponseWriter, r *http.Request) {
 	existingCookie, err := r.Cookie("token")
 	if err == nil {
-		_, newToken, err := h.as.CheckIsValid(existingCookie.Value)
+		_, err := h.as.CheckIsValid(existingCookie.Value)
 		if err == nil {
 			h.lg.Println("user already authenticated, redirecting")
-			http.SetCookie(w, &http.Cookie{
-				Name:   "token",
-				Value:  newToken,
-				MaxAge: 8 * 24 * 60 * 60,
-			})
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
@@ -300,14 +295,9 @@ func (h *pageHandler) HandleRegisterPage(w http.ResponseWriter, r *http.Request)
 func (h *pageHandler) HandleLogInPage(w http.ResponseWriter, r *http.Request) {
 	existingCookie, err := r.Cookie("token")
 	if err == nil {
-		_, newToken, err := h.as.CheckIsValid(existingCookie.Value)
+		_, err := h.as.CheckIsValid(existingCookie.Value)
 		if err == nil {
 			h.lg.Println("user already authenticated, redirecting")
-			http.SetCookie(w, &http.Cookie{
-				Name:   "token",
-				Value:  newToken,
-				MaxAge: 8 * 24 * 60 * 60,
-			})
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}

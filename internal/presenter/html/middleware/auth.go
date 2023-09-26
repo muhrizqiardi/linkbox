@@ -30,7 +30,7 @@ func (m *authMiddleware) OnlyAllowRegisteredUser(next http.Handler) http.Handler
 			http.Redirect(w, r, "/log-in", http.StatusSeeOther)
 			return
 		}
-		parsedToken, newToken, err := m.as.CheckIsValid(cookie.Value)
+		parsedToken, err := m.as.CheckIsValid(cookie.Value)
 		if err != nil {
 			m.lg.Println("failed to check token is valid:", err)
 			c := &http.Cookie{
@@ -43,13 +43,6 @@ func (m *authMiddleware) OnlyAllowRegisteredUser(next http.Handler) http.Handler
 			http.Redirect(w, r, "/log-in", http.StatusSeeOther)
 			return
 		}
-		newCookie := http.Cookie{
-			Name:   "token",
-			Value:  newToken,
-			MaxAge: 8 * 24 * 60 * 60,
-		}
-		http.SetCookie(w, &newCookie)
-
 		foundUser, err := m.us.GetOneByID(parsedToken.UserID)
 		if err != nil {
 			m.lg.Println("user not found, user not authenticated:", err)
