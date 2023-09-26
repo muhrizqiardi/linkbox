@@ -10,7 +10,7 @@ import (
 	"github.com/muhrizqiardi/linkbox/internal/presenter/html/middleware"
 )
 
-func Route(
+func DefineRoute(
 	lg *log.Logger,
 	ph handler.PageHandler,
 	ah handler.AuthHandler,

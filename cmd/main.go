@@ -79,7 +79,7 @@ func main() {
 	lh := handler.NewLinkHandler(lg, ls, t)
 	fh := handler.NewFolderHandler(lg, fs)
 	ph := handler.NewPageHandler(lg, fs, ls, as, t)
-	r := route.Route(lg, ph, ah, am, lh, fh)
+	r := route.DefineRoute(lg, ph, ah, am, lh, fh)
 
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	lg.Fatalln(http.ListenAndServe(addr, r))
