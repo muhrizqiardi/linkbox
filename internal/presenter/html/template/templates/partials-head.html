@@ -8,26 +8,29 @@
   <script src="/node_modules/hyperscript.org/dist/_hyperscript.min.js"></script>
 
   <!-- Primary Meta Tags -->
-  <title>{{.MetaData.Title}}</title>
-  <meta name="title" content="{{.MetaData.Title}}" />
-  <meta name="description" content="{{.MetaData.Description}}" />
+  <title>{{.PageMetaData.Title}}</title>
+  <meta name="title" content="{{.PageMetaData.Title}}" />
+  <meta name="description" content="{{.PageMetaData.Description}}" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://metatags.io/" />
-  <meta property="og:title" content="{{.MetaData.Title}}" />
-  <meta property="og:description" content="{{.MetaData.Description}}" />
-  {{if .MetaData.ImageURL}}
-  <meta property="og:image" content="{{.MetaData.ImageURL}}" />
+  <meta property="og:title" content="{{.PageMetaData.Title}}" />
+  <meta property="og:description" content="{{.PageMetaData.Description}}" />
+  {{if .PageMetaData.ImageURL}}
+  <meta property="og:image" content="{{.PageMetaData.ImageURL}}" />
   {{end}}
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://metatags.io/" />
-  <meta property="twitter:title" content="{{.MetaData.Title}}" />
-  <meta property="twitter:description" content="{{.MetaData.Description}}" />
-  {{if .MetaData.ImageURL}}
-  <meta property="twitter:image" content="{{.MetaData.ImageURL}}" />
+  <meta property="twitter:title" content="{{.PageMetaData.Title}}" />
+  <meta
+    property="twitter:description"
+    content="{{.PageMetaData.Description}}"
+  />
+  {{if .PageMetaData.ImageURL}}
+  <meta property="twitter:image" content="{{.PageMetaData.ImageURL}}" />
   {{end}}
 </head>
 {{end}}
