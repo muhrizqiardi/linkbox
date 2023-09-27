@@ -15,17 +15,15 @@ require (
 )
 
 require (
-	github.com/evanw/esbuild v0.19.3 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/gomodule/redigo v1.8.3 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
 )
 
 require (
 	github.com/RediSearch/redisearch-go v1.1.1
-	github.com/amacneil/dbmate v1.16.2
 	github.com/golang-migrate/migrate/v4 v4.16.2
 	github.com/google/go-cmp v0.5.9
 )
