@@ -65,7 +65,7 @@ func (r *userRepository) GetOneUserByUsername(username string) (model.UserModel,
 }
 
 func (r *userRepository) UpdateUserByID(id int, username string, password string) (model.UserModel, error) {
-	stmt, err := r.db.Preparex(query.QueryCreateUser)
+	stmt, err := r.db.Preparex(query.QueryUpdateOneUserByID)
 	if err != nil {
 		return model.UserModel{}, err
 	}
@@ -79,7 +79,7 @@ func (r *userRepository) UpdateUserByID(id int, username string, password string
 }
 
 func (r *userRepository) DeleteUserByID(id int) (model.UserModel, error) {
-	stmt, err := r.db.Preparex(query.QueryCreateUser)
+	stmt, err := r.db.Preparex(query.QueryDeleteOneUserByID)
 	if err != nil {
 		return model.UserModel{}, err
 	}
