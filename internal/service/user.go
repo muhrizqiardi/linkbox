@@ -23,11 +23,10 @@ type UserService interface {
 
 type userService struct {
 	repo repository.UserRepository
-	fs   FolderService
 }
 
-func NewUserService(repo repository.UserRepository, fs FolderService) *userService {
-	return &userService{repo, fs}
+func NewUserService(repo repository.UserRepository) *userService {
+	return &userService{repo}
 }
 
 func (s *userService) Create(payload request.CreateUserRequest) (model.UserModel, error) {
@@ -45,15 +44,6 @@ func (s *userService) Create(payload request.CreateUserRequest) (model.UserModel
 	}
 	user, err := s.repo.CreateUser(payload.Username, string(hashedPassword))
 	if err != nil {
-		return model.UserModel{}, err
-	}
-
-	newDefaultFolderPayload := request.CreateFolderRequest{
-		UniqueName: "default",
-		UserID:     user.ID,
-	}
-	// TODO: make the query create default folder by default
-	if _, err := s.fs.Create(newDefaultFolderPayload); err != nil {
 		return model.UserModel{}, err
 	}
 
