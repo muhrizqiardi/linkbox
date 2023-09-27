@@ -61,7 +61,7 @@ func main() {
 	ur := repository.NewUserRepository(dbx)
 	ls := service.NewLinkService(lr)
 	fs := service.NewFolderService(fr)
-	us := service.NewUserService(ur, fs)
+	us := service.NewUserService(ur)
 	as := service.NewAuthService(us, cfg.Secret)
 	am := middleware.NewAuthMiddleware(lg, as, us)
 	ah := handler.NewAuthHandler(lg, as, us)
