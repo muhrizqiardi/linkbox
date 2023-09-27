@@ -23,7 +23,7 @@ func NewUserRepository(db *sqlx.DB) *userRepository {
 }
 
 func (r *userRepository) CreateUser(username string, password string) (model.UserModel, error) {
-	stmt, err := r.db.Preparex(query.QueryCreateUser)
+	stmt, err := r.db.Preparex(query.QueryCreateUserWithDefaultFolder)
 	if err != nil {
 		return model.UserModel{}, err
 	}
