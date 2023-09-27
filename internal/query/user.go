@@ -1,9 +1,19 @@
 package query
 
-const QueryCreateUser = `
-	insert into users (username, password)		
-		values ($1, $2)
-		returning id, username, password, created_at, updated_at;
+const QueryCreateUserWithDefaultFolder = `
+	with 
+		new_user as (
+			insert into users (username, password)		
+				values ($1, $2)
+				returning id, username, password, created_at, updated_at
+		),
+		user_default_folder as (
+			insert into folders (unique_name, user_id)
+				select 'default', id from new_user limit 1
+				returning id, unique_name, user_id, created_at, updated_at
+		)
+		select id, username, password, created_at, updated_at
+			from new_user;
 `
 const QueryGetOneUserByID = `
 	select id, username, password, created_at, updated_at		
