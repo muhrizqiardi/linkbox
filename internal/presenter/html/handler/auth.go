@@ -5,7 +5,11 @@ import (
 	"net/http"
 
 	"github.com/gorilla/schema"
+	"github.com/lib/pq"
+	"github.com/muhrizqiardi/linkbox/internal/constant"
+	"github.com/muhrizqiardi/linkbox/internal/entities"
 	"github.com/muhrizqiardi/linkbox/internal/entities/request"
+	"github.com/muhrizqiardi/linkbox/internal/presenter/html/template"
 	"github.com/muhrizqiardi/linkbox/internal/service"
 )
 
@@ -19,29 +23,57 @@ type authHandler struct {
 	lg *log.Logger
 	as service.AuthService
 	us service.UserService
+	tx template.Executor
 }
 
-func NewAuthHandler(lg *log.Logger, as service.AuthService, us service.UserService) *authHandler {
-	return &authHandler{lg, as, us}
+func NewAuthHandler(lg *log.Logger, as service.AuthService, us service.UserService, tx template.Executor) *authHandler {
+	return &authHandler{lg, as, us, tx}
 }
 
 func (ah *authHandler) HandleAuthLogIn(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		ah.lg.Println("failed to parse form body:", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		ah.tx.LogInPage(w, entities.LogInPageData{
+			Errors: []string{
+				constant.ErrLogInUser.Error(),
+			},
+			PageMetaData: entities.PageMetaData{
+				Title:       "Register Account - Linkbox",
+				Description: "Register a new account on Linkbox",
+				ImageURL:    "",
+			},
+		})
 		return
 	}
 	var payload request.LogInRequest
 	if err := schema.NewDecoder().Decode(&payload, r.PostForm); err != nil {
 		ah.lg.Println("failed to decode form body into a struct:", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		ah.tx.LogInPage(w, entities.LogInPageData{
+			Errors: []string{
+				constant.ErrLogInUser.Error(),
+			},
+			PageMetaData: entities.PageMetaData{
+				Title:       "Register Account - Linkbox",
+				Description: "Register a new account on Linkbox",
+				ImageURL:    "",
+			},
+		})
 		return
 	}
 
 	token, err := ah.as.LogIn(payload)
 	if err != nil {
 		ah.lg.Println("failed to log in:", err)
-		http.Error(w, "Failed to log in.", http.StatusInternalServerError)
+		ah.tx.LogInPage(w, entities.LogInPageData{
+			Errors: []string{
+				constant.ErrLogInUser.Error(),
+			},
+			PageMetaData: entities.PageMetaData{
+				Title:       "Register Account - Linkbox",
+				Description: "Register a new account on Linkbox",
+				ImageURL:    "",
+			},
+		})
 		return
 	}
 
@@ -58,25 +90,70 @@ func (ah *authHandler) HandleAuthLogIn(w http.ResponseWriter, r *http.Request) {
 func (ah *authHandler) HandleCreateUserAndLogIn(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		ah.lg.Println("failed to parse form body:", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		ah.tx.RegisterPage(w, entities.RegisterPageData{
+			Errors: []string{constant.ErrRegisterUser.Error()},
+			PageMetaData: entities.PageMetaData{
+				Title:       "Register Account - Linkbox",
+				Description: "Register a new account on Linkbox",
+				ImageURL:    "",
+			},
+		})
 		return
 	}
 	var payload request.CreateUserRequest
 	if err := schema.NewDecoder().Decode(&payload, r.PostForm); err != nil {
 		ah.lg.Println("failed to decode form body into a struct:", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		ah.tx.RegisterPage(w, entities.RegisterPageData{
+			Errors: []string{constant.ErrRegisterUser.Error()},
+			PageMetaData: entities.PageMetaData{
+				Title:       "Register Account - Linkbox",
+				Description: "Register a new account on Linkbox",
+				ImageURL:    "",
+			},
+		})
 		return
 	}
 	user, err := ah.us.Create(payload)
 	if err != nil {
+		if err, ok := err.(*pq.Error); ok {
+			switch string(err.Code) {
+			case "23505":
+				ah.tx.RegisterPage(w, entities.RegisterPageData{
+					Errors: []string{constant.ErrDuplicateUsername.Error()},
+					PageMetaData: entities.PageMetaData{
+						Title:       "Register Account - Linkbox",
+						Description: "Register a new account on Linkbox",
+						ImageURL:    "",
+					},
+				})
+				return
+			}
+		}
+
 		ah.lg.Println("failed to create user:", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		ah.tx.RegisterPage(w, entities.RegisterPageData{
+			Errors: []string{constant.ErrRegisterUser.Error()},
+			PageMetaData: entities.PageMetaData{
+				Title:       "Register Account - Linkbox",
+				Description: "Register a new account on Linkbox",
+				ImageURL:    "",
+			},
+		})
 		return
 	}
 	token, err := ah.as.LogIn(request.LogInRequest{Username: user.Username, Password: payload.Password})
 	if err != nil {
-		ah.lg.Println("failed to log in:", err)
-		http.Error(w, "Failed to log in. Account creation was success, so you can try logging in manually.", http.StatusInternalServerError)
+		ah.lg.Println("failed to log in after creating user:", err)
+		ah.tx.RegisterPage(w, entities.RegisterPageData{
+			Errors: []string{
+				"Failed to log in. Account creation was success, so you can try logging in manually.",
+			},
+			PageMetaData: entities.PageMetaData{
+				Title:       "Register Account - Linkbox",
+				Description: "Register a new account on Linkbox",
+				ImageURL:    "",
+			},
+		})
 		return
 	}
 

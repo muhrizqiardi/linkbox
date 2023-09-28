@@ -21,6 +21,13 @@
             class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
           />
         </div>
+
+        {{range $e := .Errors}}
+        <div class="alert alert-error mb-4">
+          <span> {{$e}} </span>
+        </div>
+        {{end}}
+
         <button class="btn mb-4">Log in</button>
         <p>Or <a href="/register" class="link">register a new account</a>.</p>
       </form>

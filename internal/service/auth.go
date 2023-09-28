@@ -8,6 +8,7 @@ import (
 	"github.com/muhrizqiardi/linkbox/internal/constant"
 	"github.com/muhrizqiardi/linkbox/internal/entities"
 	"github.com/muhrizqiardi/linkbox/internal/entities/request"
+	"github.com/muhrizqiardi/linkbox/internal/repository"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,20 +19,20 @@ type AuthService interface {
 }
 
 type authService struct {
-	us     UserService
+	ur     repository.UserRepository
 	secret string
 }
 
-func NewAuthService(us UserService, secret string) *authService {
-	return &authService{us, secret}
+func NewAuthService(ur repository.UserRepository, secret string) *authService {
+	return &authService{ur, secret}
 }
 
 func (as *authService) LogIn(payload request.LogInRequest) (string, error) {
 	usernameRegex := regexp.MustCompile("^[a-z0-9_]{3,21}$")
 	if !usernameRegex.MatchString(payload.Username) {
-		return "", ErrInvalidUsername
+		return "", constant.ErrInvalidUsername
 	}
-	user, err := as.us.GetOneByUsername(payload.Username)
+	user, err := as.ur.GetOneUserByUsername(payload.Username)
 	if err != nil {
 		return "", err
 	}

@@ -2,9 +2,13 @@
 <html lang="en">
   {{template "head" .}}
   <body>
-    <main class="mt-16 mx-auto max-w-2xl p-4" hx-boost="true">
+    <main
+      class="mt-16 mx-auto max-w-2xl p-4"
+      hx-boost="true"
+      hx-ext="response-targets"
+    >
       <h1 class="font-bold text-lg mb-4">Register a new account</h1>
-      <form action="/register" method="post">
+      <form hx-post="/register" hx-target="body" hx-swap="innerHTML">
         <div class="grid grid-cols-4 mb-2">
           <label for="username" class="col-span-1">Username</label>
           <input
@@ -31,7 +35,14 @@
             class="col-span-3 input input-sm input-bordered text-xs sm:text-base"
           />
         </div>
-        <button class="btn mb-4">Create account</button>
+
+        {{range $e := .Errors}}
+        <div class="alert alert-error mb-4">
+          <span> {{$e}} </span>
+        </div>
+        {{end}}
+
+        <button class="btn mb-4 block">Create account</button>
         <p>
           Or <a href="/log-in" class="link">log in to your existing account</a>.
         </p>
