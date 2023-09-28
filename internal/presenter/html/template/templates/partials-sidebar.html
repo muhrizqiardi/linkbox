@@ -8,7 +8,11 @@
     <ul class="menu" hx-boost="true">
       <li><a href="/">Home</a></li>
       <li><a href="/search">Search</a></li>
-      <li><button onclick="new_link_modal.showModal()">New</button></li>
+      <li>
+        <button hx-get="/links/new" hx-target="body" hx-swap="beforeend">
+          New
+        </button>
+      </li>
       <li></li>
       <li><a href="/auth/delete" class="text-error">Log out</a></li>
     </ul>

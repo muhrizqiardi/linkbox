@@ -18,6 +18,7 @@ type Executor interface {
 	SearchResultsFragment(w io.Writer, data entities.SearchResultsFragmentData) error
 	IndexPage(w io.Writer, data entities.IndexPageData) error
 	LinksInFolderPage(w io.Writer, data entities.LinksInFolderPageData) error
+	NewLinkModalFragment(w io.Writer, data entities.NewLinkModalFragmentData) error
 	LinkFragment(w io.Writer, data entities.LinkFragmentData) error
 	EditLinkModalFragment(w io.Writer, data entities.EditLinkModalFragmentData) error
 	DeleteLinkConfirmationModalFragment(w io.Writer, data entities.DeleteLinkConfirmationModalFragmentData) error
@@ -62,6 +63,14 @@ func (t *executor) IndexPage(w io.Writer, data entities.IndexPageData) error {
 
 func (t *executor) SearchPage(w io.Writer, data entities.SearchPageData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "pages-search.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (t *executor) NewLinkModalFragment(w io.Writer, data entities.NewLinkModalFragmentData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "fragments-new-link-modal.html", data); err != nil {
 		return err
 	}
 

@@ -19,6 +19,10 @@ var (
 	ErrInvalidGetManyFoldersOrderBy    = errors.New("\"orderBy\" should either be \"created_at\" or \"update_at\"")
 	ErrInvalidGetManyFoldersSortMethod = errors.New("\"sort\" should either be \"asc\" \"desc\"")
 
+	// link
+	ErrDuplicateURL                  = errors.New("Link with similar URL already exists")
+	ErrCreateLink                    = errors.New("Failed to create link")
+	ErrUpdateLink                    = errors.New("Failed to update link")
 	ErrInvalidGetManyLinksOrderBy    = errors.New("\"orderBy\" should either be \"created_at\" or \"update_at\"")
 	ErrInvalidGetManyLinksSortMethod = errors.New("\"sort\" should either be \"asc\" \"desc\"")
 )

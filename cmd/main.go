@@ -65,7 +65,7 @@ func main() {
 	as := service.NewAuthService(ur, cfg.Secret)
 	am := middleware.NewAuthMiddleware(lg, as, us)
 	ah := handler.NewAuthHandler(lg, as, us, t)
-	lh := handler.NewLinkHandler(lg, ls, t)
+	lh := handler.NewLinkHandler(lg, ls, t, fs)
 	fh := handler.NewFolderHandler(lg, fs)
 	ph := handler.NewPageHandler(lg, fs, ls, as, t)
 	r := route.DefineRoute(lg, ph, ah, am, lh, fh, files.DistFS)

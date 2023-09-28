@@ -19,6 +19,7 @@ type PageHandler interface {
 	HandleIndexPage(w http.ResponseWriter, r *http.Request)
 	HandleSearchPage(w http.ResponseWriter, r *http.Request)
 	HandleLinksInFolderPage(w http.ResponseWriter, r *http.Request)
+	HandleNewLinkModalFragment(w http.ResponseWriter, r *http.Request)
 	HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Request)
 	HandleRegisterPage(w http.ResponseWriter, r *http.Request)
 	HandleLogInPage(w http.ResponseWriter, r *http.Request)
@@ -221,6 +222,25 @@ func (h *pageHandler) HandleLinksInFolderPage(w http.ResponseWriter, r *http.Req
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func (h *pageHandler) HandleNewLinkModalFragment(w http.ResponseWriter, r *http.Request) {
+	uCtx := r.Context().Value("user")
+	u, _ := uCtx.(model.UserModel)
+	ff, _ := h.fs.GetMany(u.ID, request.GetManyFoldersRequest{
+		Sort:    constant.GetManyFoldersSortDESC,
+		OrderBy: constant.GetManyFoldersOrderByUpdatedAt,
+		Limit:   100,
+		Offset:  0,
+	})
+
+	h.tx.NewLinkModalFragment(w, entities.NewLinkModalFragmentData{
+		User:             u,
+		Folders:          ff,
+		InitialFormValue: request.CreateLinkRequest{},
+		Errors:           []string{},
+	})
+	return
 }
 
 func (h *pageHandler) HandleEditLinkModalFragment(w http.ResponseWriter, r *http.Request) {

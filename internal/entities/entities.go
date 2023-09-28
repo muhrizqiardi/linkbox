@@ -2,6 +2,7 @@ package entities
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/muhrizqiardi/linkbox/internal/entities/request"
 	"github.com/muhrizqiardi/linkbox/internal/model"
 )
 
@@ -57,10 +58,18 @@ type LinkFragmentData struct {
 	Link model.LinkModel
 }
 
+type NewLinkModalFragmentData struct {
+	User             model.UserModel
+	Folders          []model.FolderModel
+	InitialFormValue request.CreateLinkRequest
+	Errors           []string
+}
+
 type EditLinkModalFragmentData struct {
 	User    model.UserModel
 	Folders []model.FolderModel
 	Link    model.LinkModel
+	Errors  []string
 }
 
 type DeleteLinkConfirmationModalFragmentData struct {
