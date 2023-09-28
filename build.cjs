@@ -11,5 +11,6 @@ esbuild
     outdir: "dist",
     plugins: [postcss()],
     minify: true,
+    sourcemap: true,
   })
   .catch(() => process.exit(1));
