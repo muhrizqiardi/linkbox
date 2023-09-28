@@ -1,5 +1,8 @@
 {{define "navbar"}}
-<nav class="navbar sticky top-0 px-4">
+<nav
+  class="navbar sticky top-0 px-4 z-40 bg-base-100 shadow-md shadow-base-100/50"
+  hx-boost="true"
+>
   <label for="main-drawer" class="btn btn-ghost btn-square mr-4 md:hidden">
     <span class="material-symbols-outlined">menu</span>
   </label>
@@ -11,7 +14,7 @@
       <summary class="btn btn-ghost btn-square">
         <span class="material-symbols-outlined">sort</span>
       </summary>
-      <ul class="menu dropdown-content z-[1] bg-base-200 rounded-xl w-80">
+      <ul class="menu dropdown-content bg-base-200 rounded-xl w-80">
         <li>
           <a href="?orderBy=created_at&sort=asc">Creation date (ascending)</a>
         </li>
