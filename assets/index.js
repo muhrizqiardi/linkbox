@@ -1,2 +1,2 @@
-import "htmx.org";
+import "./defineHtmx";
 import "hyperscript.org";
