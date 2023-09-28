@@ -1,0 +1,47 @@
+{{range $e := .Links}}
+<article id="link_{{$e.ID}}" class="card card-compact bg-base-200 mb-4">
+  <div class="card-body">
+    <p class="mb-0.5">{{$e.Title}}</p>
+    <p>
+      <a href="{{$e.URL}}" class="text-xs"> {{$e.URL}} </a>
+    </p>
+    <p>{{$e.Description}}</p>
+    <div class="card-actions mt-3 items-center">
+      <ul class="menu menu-horizontal p-0">
+        <li class="text-error">
+          <button hx-delete="/links/{{$e.ID}}">
+            <span class="sr-only">Delete</span>
+            <span
+              class="material-symbols-outlined text-error"
+              style="font-size: 18px"
+            >
+              delete
+            </span>
+          </button>
+        </li>
+        <li>
+          <button
+            hx-get="/links/{{$e.ID}}/edit"
+            hx-target="body"
+            hx-swap="beforeend"
+          >
+            <span class="sr-only">Edit</span>
+            <span class="material-symbols-outlined" style="font-size: 18px">
+              edit
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</article>
+{{end}}
+<button
+  class="btn mt-6 text-center"
+  hx-get="/folders/{{.FolderID}}/links/fragment?page={{.NextPage}}"
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-trigger="revealed"
+>
+  Load more
+</button>

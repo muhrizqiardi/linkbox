@@ -25,7 +25,9 @@
 
       <button
         class="btn btn-neutral btn-sm mt-4 mx-auto normal-case"
-        onclick="new_folder_modal.showModal()"
+        hx-get="/folders/new"
+        hx-target="body"
+        hx-swap="beforeend"
       >
         New Folder
       </button>

@@ -17,8 +17,10 @@ type Executor interface {
 	SearchPage(w io.Writer, data entities.SearchPageData) error
 	SearchResultsFragment(w io.Writer, data entities.SearchResultsFragmentData) error
 	IndexPage(w io.Writer, data entities.IndexPageData) error
+	NewFolderModalFragment(w io.Writer, data entities.NewFolderModalFragmentData) error
 	LinksInFolderPage(w io.Writer, data entities.LinksInFolderPageData) error
 	NewLinkModalFragment(w io.Writer, data entities.NewLinkModalFragmentData) error
+	LinksFragment(w io.Writer, data entities.LinksFragmentData) error
 	LinkFragment(w io.Writer, data entities.LinkFragmentData) error
 	EditLinkModalFragment(w io.Writer, data entities.EditLinkModalFragmentData) error
 	DeleteLinkConfirmationModalFragment(w io.Writer, data entities.DeleteLinkConfirmationModalFragmentData) error
@@ -85,6 +87,14 @@ func (t *executor) SearchResultsFragment(w io.Writer, data entities.SearchResult
 	return nil
 }
 
+func (t *executor) NewFolderModalFragment(w io.Writer, data entities.NewFolderModalFragmentData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "fragments-new-folder-modal.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (t *executor) LinksInFolderPage(w io.Writer, data entities.LinksInFolderPageData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "pages-links-in-folder.html", data); err != nil {
 		return err
@@ -95,6 +105,14 @@ func (t *executor) LinksInFolderPage(w io.Writer, data entities.LinksInFolderPag
 
 func (t *executor) LinkFragment(w io.Writer, data entities.LinkFragmentData) error {
 	if err := t.tmpl.ExecuteTemplate(w, "fragments-link.html", data); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (t *executor) LinksFragment(w io.Writer, data entities.LinksFragmentData) error {
+	if err := t.tmpl.ExecuteTemplate(w, "fragments-links.html", data); err != nil {
 		return err
 	}
 

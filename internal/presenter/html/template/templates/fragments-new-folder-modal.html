@@ -1,5 +1,8 @@
-{{define "newFolderModal"}}
-<dialog id="new_folder_modal" class="modal modal-bottom sm:modal-middle">
+<dialog
+  id="new_folder_modal"
+  class="modal modal-bottom sm:modal-middle modal-open"
+  hx-boost="true"
+>
   <form action="/folders" method="post" class="modal-box">
     <h3 class="font-bold text-lg mb-4">Create new folder</h3>
     <div class="grid grid-cols-4 mb-2">
@@ -16,7 +19,7 @@
       <button
         type="button"
         class="btn btn-ghost"
-        onclick="new_folder_modal.close()"
+        onclick="new_folder_modal.remove()"
       >
         Cancel
       </button>
@@ -24,4 +27,3 @@
     </div>
   </form>
 </dialog>
-{{end}}

@@ -28,9 +28,11 @@ type LogInPageData struct {
 }
 
 type IndexPageData struct {
-	User    model.UserModel
-	Folders []model.FolderModel
-	Links   []model.LinkModel
+	User     model.UserModel
+	Folders  []model.FolderModel
+	Links    []model.LinkModel
+	FolderID int
+	NextPage int
 	PageMetaData
 }
 
@@ -46,12 +48,24 @@ type SearchResultsFragmentData struct {
 	PageMetaData
 }
 
+type NewFolderModalFragmentData struct {
+	User model.UserModel
+}
+
 type LinksInFolderPageData struct {
-	User    model.UserModel
-	Folder  model.FolderModel
-	Folders []model.FolderModel
-	Links   []model.LinkModel
+	User     model.UserModel
+	Folder   model.FolderModel
+	Folders  []model.FolderModel
+	Links    []model.LinkModel
+	FolderID int
+	NextPage int
 	PageMetaData
+}
+
+type LinksFragmentData struct {
+	Links    []model.LinkModel
+	FolderID int
+	NextPage int
 }
 
 type LinkFragmentData struct {
