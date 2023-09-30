@@ -20,7 +20,7 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByCreatedAtSortASC = `
 	)
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by created_at asc
 		limit $2 offset $3;
@@ -34,7 +34,7 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByCreatedAtSortDESC = `
 	)
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by created_at desc
 		limit $2 offset $3;
@@ -48,7 +48,7 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortASC = `
 	)
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by updated_at asc
 		limit $2 offset $3;
@@ -62,7 +62,7 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortDESC = `
 	)
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by updated_at desc
 		limit $2 offset $3;
@@ -70,7 +70,7 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortDESC = `
 const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortASC = `
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2
@@ -80,7 +80,7 @@ const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortASC = `
 const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortDESC = `
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2
@@ -90,7 +90,7 @@ const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortDESC = `
 const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortASC = `
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2
@@ -100,7 +100,7 @@ const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortASC = `
 const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortDESC = `
 	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
 		from links as l
-		right join link_medias as lm on lm.link_id = l.id
+		left join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2
