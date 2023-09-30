@@ -2,8 +2,6 @@ package response
 
 import (
 	"time"
-
-	"github.com/muhrizqiardi/linkbox/internal/model"
 )
 
 type LinkWithMediaResponse struct {
@@ -13,7 +11,9 @@ type LinkWithMediaResponse struct {
 	Description string `db:"description"`
 	UserID      int    `db:"user_id"`
 	FolderID    int    `db:"folder_id"`
-	Media       []model.LinkMediaModel
-	CreatedAt   time.Time `db:"created_at"`
-	UpdatedAt   time.Time `db:"updated_at"`
+	Media       []struct {
+		MediaPath *string `db:"media_path"`
+	}
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
