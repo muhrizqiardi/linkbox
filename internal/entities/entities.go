@@ -108,7 +108,7 @@ type LinksFragmentData struct {
 }
 
 type LinkFragmentData struct {
-	Link model.LinkModel
+	Link response.LinkWithMediaResponse
 }
 
 type NewLinkModalFragmentData struct {

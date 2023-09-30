@@ -12,6 +12,7 @@ import (
 	"github.com/muhrizqiardi/linkbox/internal/constant"
 	"github.com/muhrizqiardi/linkbox/internal/entities"
 	"github.com/muhrizqiardi/linkbox/internal/entities/request"
+	"github.com/muhrizqiardi/linkbox/internal/entities/response"
 	"github.com/muhrizqiardi/linkbox/internal/model"
 	"github.com/muhrizqiardi/linkbox/internal/presenter/html/template"
 	"github.com/muhrizqiardi/linkbox/internal/service"
@@ -233,7 +234,17 @@ func (h *linkHandler) HandleUpdateLink(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("HX-Trigger", "close-edit-link-modal")
 	h.tx.LinkFragment(w, entities.LinkFragmentData{
-		Link: l,
+		Link: response.LinkWithMediaResponse{
+			ID:          l.ID,
+			URL:         l.URL,
+			Title:       l.Title,
+			Description: l.Description,
+			UserID:      l.UserID,
+			FolderID:    l.FolderID,
+			Media:       []response.LinkWithMediaResponseMedia{},
+			CreatedAt:   l.CreatedAt,
+			UpdatedAt:   l.UpdatedAt,
+		},
 	})
 	return
 }

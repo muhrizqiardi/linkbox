@@ -1,0 +1,53 @@
+{{define "linkCard"}}
+<article id="link_{{.ID}}" class="card card-compact bg-base-200 mb-4">
+  <div class="card-body flex flex-row gap-4">
+    {{if .Media}} {{if (index .Media 0).MediaPath}}
+    <div class="h-16 w-16 md:w-24 flex-shrink-0">
+      <img
+        src="{{(index .Media 0).MediaPath}}"
+        class="w-full aspect-[1200/628] object-contain bg-base-300"
+      />
+    </div>
+    {{end}} {{end}}
+
+    <div>
+      <p class="mb-0.5">{{.Title}}</p>
+      <p>
+        <a href="{{.URL}}" class="text-xs">{{.URL}}</a>
+      </p>
+      <p>{{.Description}}</p>
+      <div class="card-actions mt-3 items-center">
+        <ul class="menu menu-horizontal p-0">
+          <li class="text-error">
+            <button
+              hx-get="/links/{{.ID}}/delete"
+              hx-target="body"
+              hx-swap="beforeend"
+            >
+              <span class="sr-only">Delete</span>
+              <span
+                class="material-symbols-outlined text-error"
+                style="font-size: 18px"
+              >
+                delete
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              hx-get="/links/{{.ID}}/edit"
+              hx-target="body"
+              hx-swap="beforeend"
+            >
+              <span class="sr-only">Edit</span>
+              <span class="material-symbols-outlined" style="font-size: 18px">
+                edit
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</article>
+{{end}}
