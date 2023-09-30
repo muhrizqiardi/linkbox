@@ -57,9 +57,10 @@ func main() {
 	}
 
 	lr := repository.NewLinkRepository(dbx, rsc)
+	lmr := repository.NewLinkMediaRepository(dbx)
 	fr := repository.NewFolderRepository(dbx)
 	ur := repository.NewUserRepository(dbx)
-	ls := service.NewLinkService(lr)
+	ls := service.NewLinkService(lr, lmr)
 	fs := service.NewFolderService(fr)
 	us := service.NewUserService(ur)
 	as := service.NewAuthService(ur, cfg.Secret)

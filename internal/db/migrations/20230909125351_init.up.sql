@@ -48,6 +48,17 @@ create table if not exists links (
         references folders(id)
 );
 
+create table if not exists link_medias (
+    id serial primary key,
+    link_id int not null,
+    media_path text not null,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp,
+
+    foreign key (link_id)
+        references links(id)
+);
+
 create table if not exists link_tags (
     id serial primary key,
     link_id int not null,

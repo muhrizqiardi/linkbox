@@ -18,8 +18,9 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByCreatedAtSortASC = `
 				user_id = $1 and 
 				unique_name = 'default'
 	)
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by created_at asc
 		limit $2 offset $3;
@@ -31,8 +32,9 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByCreatedAtSortDESC = `
 				user_id = $1 and 
 				unique_name = 'default'
 	)
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by created_at desc
 		limit $2 offset $3;
@@ -44,8 +46,9 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortASC = `
 				user_id = $1 and 
 				unique_name = 'default'
 	)
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by updated_at asc
 		limit $2 offset $3;
@@ -57,15 +60,17 @@ const QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortDESC = `
 				user_id = $1 and 
 				unique_name = 'default'
 	)
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where folder_id = (select id from default_folder)
 		order by updated_at desc
 		limit $2 offset $3;
 `
 const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortASC = `
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2
@@ -73,8 +78,9 @@ const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortASC = `
 		limit $3 offset $4;
 `
 const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortDESC = `
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2
@@ -82,8 +88,9 @@ const QueryGetManyLinksInsideFolder_OrderByCreatedAtSortDESC = `
 		limit $3 offset $4;
 `
 const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortASC = `
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2
@@ -91,8 +98,9 @@ const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortASC = `
 		limit $3 offset $4;
 `
 const QueryGetManyLinksInsideFolder_OrderByUpdatedAtSortDESC = `
-	select id, url, title, description, user_id, folder_id, created_at, updated_at
-		from links
+	select l.id, url, title, description, user_id, folder_id, lm.media_path as media_path, l.created_at, l.updated_at
+		from links as l
+		right join link_medias as lm on lm.link_id = l.id
 		where 
 			user_id = $1 and
 			folder_id = $2

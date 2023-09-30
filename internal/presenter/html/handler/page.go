@@ -269,7 +269,7 @@ func (h *pageHandler) HandleLinksFragment(w http.ResponseWriter, r *http.Request
 		Sort:    sort,
 	})
 	if err != nil {
-		h.lg.Println("failed to fetch folders:", err)
+		h.lg.Println("failed to fetch links inside folder:", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}

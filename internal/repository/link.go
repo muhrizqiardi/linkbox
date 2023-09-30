@@ -5,10 +5,11 @@ import (
 	"strconv"
 
 	"github.com/RediSearch/redisearch-go/redisearch"
+	"github.com/jackskj/carta"
 	"github.com/jmoiron/sqlx"
+	"github.com/muhrizqiardi/linkbox/internal/entities/response"
 	"github.com/muhrizqiardi/linkbox/internal/model"
 	"github.com/muhrizqiardi/linkbox/internal/query"
-	// "github.com/muhrizqiardi/linkbox/pkg/common"
 )
 
 const (
@@ -35,7 +36,7 @@ type LinkRepository interface {
 		offset int,
 		orderBy string,
 		sort string,
-	) ([]model.LinkModel, error)
+	) ([]response.LinkWithMediaResponse, error)
 	GetManyLinksInsideFolder(
 		userID int,
 		folder_id int,
@@ -43,7 +44,7 @@ type LinkRepository interface {
 		offset int,
 		orderBy string,
 		sort string,
-	) ([]model.LinkModel, error)
+	) ([]response.LinkWithMediaResponse, error)
 	UpdateOneLinkByID(
 		id int,
 		url string,
@@ -178,7 +179,7 @@ func (r *linkRepository) GetManyLinksInsideDefaultFolder(
 	offset int,
 	orderBy string,
 	sort string,
-) ([]model.LinkModel, error) {
+) ([]response.LinkWithMediaResponse, error) {
 	var q string = query.QueryGetManyLinksInsideDefaultFolder_OrderByUpdatedAtSortDESC
 	switch orderBy {
 	case OrderByCreatedAt:
@@ -205,15 +206,19 @@ func (r *linkRepository) GetManyLinksInsideDefaultFolder(
 
 	stmt, err := r.db.Preparex(q)
 	if err != nil {
-		return []model.LinkModel{}, err
+		return []response.LinkWithMediaResponse{}, err
 	}
 
-	var link []model.LinkModel
-	if err := stmt.Select(&link, userID, limit, offset); err != nil {
-		return []model.LinkModel{}, err
+	var ll []response.LinkWithMediaResponse
+	rows, err := stmt.Query(userID, limit, offset)
+	if err != nil {
+		return []response.LinkWithMediaResponse{}, err
+	}
+	if err := carta.Map(rows, &ll); err != nil {
+		return []response.LinkWithMediaResponse{}, err
 	}
 
-	return link, nil
+	return ll, nil
 }
 
 func (r *linkRepository) GetManyLinksInsideFolder(
@@ -223,7 +228,7 @@ func (r *linkRepository) GetManyLinksInsideFolder(
 	offset int,
 	orderBy string,
 	sort string,
-) ([]model.LinkModel, error) {
+) ([]response.LinkWithMediaResponse, error) {
 	var q string
 	switch orderBy {
 	case OrderByCreatedAt:
@@ -250,15 +255,19 @@ func (r *linkRepository) GetManyLinksInsideFolder(
 
 	stmt, err := r.db.Preparex(q)
 	if err != nil {
-		return []model.LinkModel{}, err
+		return []response.LinkWithMediaResponse{}, err
 	}
 
-	var link []model.LinkModel
-	if err := stmt.Select(&link, userID, folderId, limit, offset); err != nil {
-		return []model.LinkModel{}, err
+	var ll []response.LinkWithMediaResponse
+	rows, err := stmt.Query(userID, folderId, limit, offset)
+	if err != nil {
+		return []response.LinkWithMediaResponse{}, err
+	}
+	if err := carta.Map(rows, &ll); err != nil {
+		return []response.LinkWithMediaResponse{}, err
 	}
 
-	return link, nil
+	return ll, nil
 }
 
 func (r *linkRepository) UpdateOneLinkByID(
