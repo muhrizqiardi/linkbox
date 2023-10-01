@@ -14,7 +14,7 @@ const QueryGetOneFolderByID = `
 const QueryGetOneFolderByUniqueName = `
 	select id, user_id, unique_name, created_at, updated_at
 		from folders
-		where unique_name = $1, user_id = $2
+		where unique_name = $1 and user_id = $2
 		limit 1;
 `
 const QueryGetManyFolders_ByUpdatedAtASC = `
